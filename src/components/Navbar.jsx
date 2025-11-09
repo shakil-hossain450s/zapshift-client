@@ -24,7 +24,7 @@ const Navbar = () => {
             {links}
           </ul>
         </div>
-        <Link className="text-xl flex items-end relative">
+        <Link to="/" className="text-xl flex items-end relative">
           <img className="w-10" src={logo} alt="" />
           <span className="text-2xl font-bold text-[#303030] absolute left-6">ZapShift</span>
         </Link>
@@ -38,7 +38,9 @@ const Navbar = () => {
         <button className='btn btn-outline min-h-12 px-7 text-[#606060] rounded-lg border border-[#DADADA] font-medium hover:-translate-y-0.5 duration-400 text-[16px]'>
           Sign In
         </button>
-        <PrimaryButton>Be a Rider</PrimaryButton>
+        <span className="hidden lg:block">
+          <PrimaryButton>Be a Rider</PrimaryButton>
+        </span>
       </div>
     </div>
   );
