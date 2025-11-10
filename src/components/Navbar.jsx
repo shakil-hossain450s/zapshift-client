@@ -38,7 +38,7 @@ const Navbar = () => {
         <button className='btn btn-outline min-h-12 px-7 text-[#606060] rounded-lg border border-[#DADADA] font-medium hover:-translate-y-0.5 duration-400 text-[16px]'>
           Sign In
         </button>
-        <span className="hidden lg:block">
+        <span className="hidden md:block">
           <PrimaryButton>Be a Rider</PrimaryButton>
         </span>
       </div>

@@ -11,13 +11,13 @@ const brands = [amazon, casio, moonStar, randstad, star];
 const BrandMarquee = () => {
   return (
     <section className='my-20 max-w-7xl mx-auto rounded'>
-      <h2 className='text-center mb-8 text-3xl font-bold text-[#03373D]'>We've helped thousands of sales teams</h2>
+      <h2 className='text-center mb-8 text-3xl font-bold text-[#03373D]'>We've helped thousands of sales teams</h2>
       <Marquee>
-        <div className='flex justify-between items-center gap-32'>
+        <div className='flex justify-between items-center'>
           {
             brands.map((brand, index) => (
-              <div key={index}>
-                <img className='h-6' src={brand} alt={`client logo ${index + 1}`} />
+              <div key={index} className='mx-10 md:mx-20'>
+                <img className='h-6 object-contain' src={brand} alt={`client logo ${index + 1}`} />
               </div>
             ))
           }
