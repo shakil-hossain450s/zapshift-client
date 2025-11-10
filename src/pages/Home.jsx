@@ -5,11 +5,13 @@ import BrandMarquee from '../components/Home/BrandMarquee/BrandMarquee';
 import Features from '../components/Home/Features/Features';
 import BeMarcent from '../components/Home/BeMarcent/BeMarcent';
 import FaqSection from '../components/Home/FaqSection/FaqSection';
+import HowItWorks from '../components/Home/HowItWorks/HowItWorks';
 
 const Home = () => {
   return (
     <div>
       <Banner></Banner>
+      <HowItWorks></HowItWorks>
       <Services></Services>
       <BrandMarquee></BrandMarquee>
       <Features></Features>

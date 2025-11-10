@@ -12,7 +12,7 @@ const Navbar = () => {
     <li><NavLink to="/be-a-rider">Be a Rider</NavLink></li>
   </>
   return (
-    <div data-aos="fade-up" className="navbar bg-base-100 shadow-sm rounded mt-4 p-3">
+    <div data-aos="fade-up" className="navbar bg-base-100 shadow-sm rounded mt-4 pr-2 md:p-3">
       <div className="navbar-start">
         <div className="dropdown">
           <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
@@ -25,8 +25,8 @@ const Navbar = () => {
           </ul>
         </div>
         <Link to="/" className="text-xl flex items-end relative">
-          <img className="w-10" src={logo} alt="" />
-          <span className="text-2xl font-bold text-[#303030] absolute left-6">ZapShift</span>
+          <img className="w-6 md:w-10" src={logo} alt="" />
+          <span className="text-xl md:text-2xl font-bold text-[#303030] absolute left-6">ZapShift</span>
         </Link>
       </div>
       <div className="navbar-center hidden lg:flex">
