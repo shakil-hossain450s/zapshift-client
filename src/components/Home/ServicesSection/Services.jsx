@@ -1,5 +1,5 @@
 import { FaBuilding, FaExchangeAlt, FaGlobeAsia, FaMoneyBillWave, FaTruck, FaWarehouse } from 'react-icons/fa';
-import SectionHeading from '../SectionHeading';
+import SectionHeading from '../../SectionHeading';
 import ServiceCard from './ServiceCard';
 
 const servicesData = [
@@ -47,7 +47,7 @@ const Services = () => {
       <div className='text-center'>
         <SectionHeading title="Our Services" description="Enjoy fast, reliable parcel delivery with real-time tracking and zero hassle. From personal packages to business shipments — we deliver on time, every time."></SectionHeading>
       </div>
-      <div className='grid gap-6 sm:grid-cols-2 lg:grid-cols-3'>
+      <div className='grid gap-6 sm:grid-cols-2 lg:grid-cols-3 mt-10'>
         {
           servicesData.map(service => (
             <ServiceCard key={service.title} service={service} />
