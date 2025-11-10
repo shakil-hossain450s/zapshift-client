@@ -1,5 +1,11 @@
+/* urbanist google font */
+@import url('https://fonts.googleapis.com/css2?family=Urbanist:ital,wght@0,100..900;1,100..900&display=swap');
 @import "tailwindcss";
 @plugin "daisyui";
+
+body{
+  font-family: "Urbanist", sans-serif;
+}
 
 a.active {
   border-bottom: 1px solid #ACC857;
