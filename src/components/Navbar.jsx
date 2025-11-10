@@ -35,9 +35,11 @@ const Navbar = () => {
         </ul>
       </div>
       <div className="navbar-end gap-4">
-        <button className='btn btn-outline min-h-12 px-7 text-[#606060] rounded-lg border border-[#DADADA] font-medium hover:-translate-y-0.5 duration-400 text-[16px]'>
-          Sign In
-        </button>
+        <Link to="/signin">
+          <button className='btn btn-outline min-h-12 px-7 text-[#606060] rounded-lg border border-[#DADADA] font-medium hover:-translate-y-0.5 duration-400 text-[16px]'>
+            Sign In
+          </button>
+        </Link>
         <span className="hidden md:block">
           <PrimaryButton>Be a Rider</PrimaryButton>
         </span>

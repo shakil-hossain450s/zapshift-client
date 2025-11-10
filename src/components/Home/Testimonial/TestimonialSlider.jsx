@@ -75,9 +75,9 @@ const testimonials = [
 
 const TestimonialSlider = () => {
   return (
-    <section className='my-20'>
+    <section data-aos="fade-right" className='my-20'>
       <div className='text-center mb-10'>
-        <div className='flex items-center justify-center mb-8'>
+        <div data-aos="fade-down" className='flex items-center justify-center mb-8'>
           <img src={customerTopImage} alt="customerTopImage" />
         </div>
         <SectionHeading

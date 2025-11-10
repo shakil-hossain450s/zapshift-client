@@ -3,7 +3,7 @@ import Navbar from '../components/Navbar';
 import { Outlet } from 'react-router';
 import Footer from '../components/Footer';
 
-const Root = () => {
+const RootLayout = () => {
   return (
     <div className='bg-[#EAECE9FF]' >
       <div className='flex flex-col min-h-screen max-w-[1600px] w-11/12 mx-auto'>
@@ -22,4 +22,4 @@ const Root = () => {
   );
 };
 
-export default Root;
+export default RootLayout;

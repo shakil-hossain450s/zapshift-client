@@ -17,8 +17,8 @@ const Home = () => {
       <BrandMarquee />
       <Features />
       <BeMarcent />
-      <FaqSection />
       <TestimonialSlider />
+      <FaqSection />
     </div>
   );
 };

@@ -1,6 +1,7 @@
 import React from 'react';
 import SectionHeading from '../../SectionHeading';
 import FaqItem from './FaqItem';
+import PrimaryButton from '../../PrimaryButton';
 
 const faqData = [
   {
@@ -41,6 +42,11 @@ const FaqSection = () => {
         {faqData.map((faq, i) => (
           <FaqItem key={i + 1} faq={faq} defaultChecked={i === 0}></FaqItem>
         ))}
+      </div>
+      <div className='mt-6 md:mt-12 flex items-center justify-center'>
+        <PrimaryButton>
+          See More FAQ’s
+        </PrimaryButton>
       </div>
     </section>
   );
