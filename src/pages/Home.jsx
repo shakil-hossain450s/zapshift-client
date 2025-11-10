@@ -4,6 +4,7 @@ import Banner from '../components/Home/Banner/Banner';
 import BrandMarquee from '../components/Home/BrandMarquee/BrandMarquee';
 import Features from '../components/Home/Features/Features';
 import BeMarcent from '../components/Home/BeMarcent/BeMarcent';
+import FaqSection from '../components/Home/FaqSection/FaqSection';
 
 const Home = () => {
   return (
@@ -13,6 +14,7 @@ const Home = () => {
       <BrandMarquee></BrandMarquee>
       <Features></Features>
       <BeMarcent></BeMarcent>
+      <FaqSection></FaqSection>
     </div>
   );
 };

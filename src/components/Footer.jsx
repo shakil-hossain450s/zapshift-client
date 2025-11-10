@@ -4,7 +4,7 @@ import { FaFacebook, FaInstagram, FaLinkedin, FaTwitter, FaYoutube } from "react
 
 const Footer = () => {
   return (
-    <footer className="footer footer-horizontal footer-center bg-[#0B0B0B] text-[#DADADA] p-4 md:p-10 mb-4 rounded">
+    <footer className="footer footer-horizontal footer-center bg-[#0B0B0B] text-[#DADADA] p-4 md:p-10 mb-4 rounded-2xl">
       <aside className="max-w-2xl mx-auto">
         <Link to="/" className="text-xl flex items-end relative -left-10">
           <img className="w-10" src={logo} alt="" />

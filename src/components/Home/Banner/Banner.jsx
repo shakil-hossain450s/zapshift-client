@@ -7,7 +7,7 @@ import bannerImage3 from '../../../assets/images/banner/banner3.png';
 
 const Banner = () => {
   return (
-    <div data-aos="fade-down">
+    <section data-aos="fade-down">
       <Carousel className='mt-10 rounded-2xl'
         autoPlay={true}
         infiniteLoop={true}
@@ -25,7 +25,7 @@ const Banner = () => {
           <img src={bannerImage3} />
         </div>
       </Carousel>
-    </div>
+    </section>
 
   );
 };
