@@ -6,17 +6,19 @@ import Features from '../components/Home/Features/Features';
 import BeMarcent from '../components/Home/BeMarcent/BeMarcent';
 import FaqSection from '../components/Home/FaqSection/FaqSection';
 import HowItWorks from '../components/Home/HowItWorks/HowItWorks';
+import TestimonialSlider from '../components/Home/Testimonial/TestimonialSlider';
 
 const Home = () => {
   return (
     <div>
-      <Banner></Banner>
-      <HowItWorks></HowItWorks>
-      <Services></Services>
-      <BrandMarquee></BrandMarquee>
-      <Features></Features>
-      <BeMarcent></BeMarcent>
-      <FaqSection></FaqSection>
+      <Banner />
+      <HowItWorks />
+      <Services />
+      <BrandMarquee />
+      <Features />
+      <BeMarcent />
+      <FaqSection />
+      <TestimonialSlider />
     </div>
   );
 };

@@ -1,9 +1,7 @@
-import React from 'react';
-
 const HowItWorksCard = ({info}) => {
   const {icon: Icon, title, description} = info;
   return (
-    <div className='bg-white rounded-2xl p-8'>
+    <div data-aos="fade-right" className='bg-white rounded-2xl p-8'>
       <div className='text-4xl mb-4 text-[#03373D]'>
         <Icon />
       </div>
