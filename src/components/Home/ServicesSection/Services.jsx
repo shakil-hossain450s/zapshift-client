@@ -43,7 +43,7 @@ const servicesData = [
 
 const Services = () => {
   return (
-    <section className='bg-[#03373D] py-20 px-10 my-20 rounded-2xl'>
+    <section data-aos="fade-up" className='bg-[#03373D] py-10 md:py-20 px-4 md:px-10 my-20 rounded-2xl'>
       <div className='text-center'>
         <SectionHeading title="Our Services" description="Enjoy fast, reliable parcel delivery with real-time tracking and zero hassle. From personal packages to business shipments — we deliver on time, every time."></SectionHeading>
       </div>

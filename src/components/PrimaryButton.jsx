@@ -1,8 +1,8 @@
 import React from 'react';
 
-const PrimaryButton = ({ children }) => {
+const PrimaryButton = ({ children, className }) => {
   return (
-    <button className='btn min-h-12 bg-[#CAEB66] px-7 rounded-lg text-[#2b2a2a] border-[#CAEB66] shadow-none font-medium hover:-translate-y-0.5 duration-400 text-[16px]'>
+    <button className={`btn  min-h-12 bg-[#CAEB66] ${!className ? 'rounded-lg px-7' : className} text-[#2b2a2a] border border-[#CAEB66] text-xl font-bold shadow-none hover:-translate-y-0.5 duration-400 text-[16px] transition-all`}>
       {children}
     </button>
   );

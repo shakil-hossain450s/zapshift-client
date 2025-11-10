@@ -12,7 +12,7 @@ const Navbar = () => {
     <li><NavLink to="/be-a-rider">Be a Rider</NavLink></li>
   </>
   return (
-    <div className="navbar bg-base-100 shadow-sm rounded mt-4 p-3">
+    <div data-aos="fade-up" className="navbar bg-base-100 shadow-sm rounded mt-4 p-3">
       <div className="navbar-start">
         <div className="dropdown">
           <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">

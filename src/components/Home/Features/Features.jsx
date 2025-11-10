@@ -23,7 +23,7 @@ const featuresData = [
 
 const Features = () => {
   return (
-    <section className='my-20'>
+    <section data-aos="fade-up" className='my-20'>
       <div className="border border-dashed my-20 border-[#03464D] w-full"></div>
 
       <div className='grid grid-cols-1 gap-8'>

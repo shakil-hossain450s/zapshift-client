@@ -10,7 +10,7 @@ const brands = [amazon, casio, moonStar, randstad, star];
 
 const BrandMarquee = () => {
   return (
-    <section className='my-20 max-w-7xl mx-auto rounded'>
+    <section data-aos="fade-up-right" className='my-20 max-w-7xl mx-auto rounded'>
       <h2 className='text-center mb-8 text-3xl font-bold text-[#03373D]'>We've helped thousands of sales teams</h2>
       <Marquee>
         <div className='flex justify-between items-center'>
