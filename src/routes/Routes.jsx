@@ -6,6 +6,8 @@ import Signin from "../pages/Authentication/Signin/Signin";
 import Register from "../pages/Authentication/Register/Register";
 import Coverage from "../pages/Coverage/Coverage";
 import About from "../pages/About/About";
+import ErrorPage from "../pages/ErrorPage/ErrorPage";
+import AddParcel from "../pages/AddParcel/AddParcel";
 
 const router = createBrowserRouter([
   {
@@ -15,7 +17,9 @@ const router = createBrowserRouter([
       { index: true, Component: Home },
       { path: 'coverage', Component: Coverage },
       { path: 'about', Component: About },
-    ]
+      { path: 'add-percel', Component: AddParcel },
+      // { path: '*', Component: ErrorPage }
+    ],
   },
   {
     path: "/",
