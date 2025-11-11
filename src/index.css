@@ -12,6 +12,8 @@ a.active {
   background-color: #ACC857;
   padding: 5px 10px;
   border-radius: 10px;
-  color: #303030;
+  /* color: #303030; */
+  color: white;
   font-weight: 500;
+
 }

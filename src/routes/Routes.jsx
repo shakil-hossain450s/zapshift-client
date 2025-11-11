@@ -4,13 +4,15 @@ import RootLayout from "../layouts/RootLayout";
 import AuthLayout from "../layouts/AuthLayout";
 import Signin from "../pages/Authentication/Signin/Signin";
 import Register from "../pages/Authentication/Register/Register";
+import Coverage from "../pages/Coverage/Coverage";
 
 const router = createBrowserRouter([
   {
     path: "/",
     Component: RootLayout,
     children: [
-      { index: true, Component: Home }
+      { index: true, Component: Home },
+      { path: '/coverage', Component: Coverage }
     ]
   },
   {

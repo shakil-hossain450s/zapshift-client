@@ -1,17 +1,33 @@
 import PrimaryButton from '../../../components/PrimaryButton';
-import { Link } from 'react-router';
-import SocialLogin from '../SocialLogin/SocialLogin';
+import { Link, useLocation, useNavigate } from 'react-router';
+import SocialLogin from '../../../components/SocialLogin/SocialLogin';
 import { useForm } from 'react-hook-form';
 import { useState } from 'react';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import useAuth from '../../../hooks/useAuth';
+import toast from 'react-hot-toast';
 
 const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const { createUser } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const from = location.state?.from?.pathname || '/';
 
   const { register, handleSubmit, formState: { errors } } = useForm();
-  const handleRegister = (data) => {
-    console.log(data);
-    console.log(errors);
+  const handleRegister = async (data) => {
+    const { email, password } = data;
+    try {
+      const result = await createUser(email, password);
+      console.log(result);
+      if (result.user) {
+        toast.success('Registration successfully!');
+        navigate(from);
+      }
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   return (

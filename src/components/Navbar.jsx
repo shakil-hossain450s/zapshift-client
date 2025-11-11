@@ -1,8 +1,12 @@
 import { Link, NavLink } from "react-router";
 import PrimaryButton from "./PrimaryButton";
 import logo from "../assets/images/logo.png";
+import useAuth from "../hooks/useAuth";
+import toast from "react-hot-toast";
 
 const Navbar = () => {
+  const { user, signOutUser } = useAuth();
+
   const links = <>
     <li><NavLink to="/">Home</NavLink></li>
     <li><NavLink to="/services">Services</NavLink></li>
@@ -11,8 +15,19 @@ const Navbar = () => {
     <li><NavLink to="/pricing">Pricing</NavLink></li>
     <li><NavLink to="/be-a-rider">Be a Rider</NavLink></li>
   </>
+
+  const handleSignOut = async () => {
+    try {
+      await signOutUser();
+      toast.success('Logged out successfully!');
+    } catch (err) {
+      console.log(err);
+      toast.error(err.code)
+    }
+  }
+
   return (
-    <div data-aos="fade-up" className="navbar bg-base-100 shadow-sm rounded mt-4 pr-2 md:p-3">
+    <div data-aos="fade-up" className="navbar bg-base-100 shadow-sm rounded-2xl mt-4 pr-2 md:p-3 z-50">
       <div className="navbar-start">
         <div className="dropdown">
           <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
@@ -35,14 +50,24 @@ const Navbar = () => {
         </ul>
       </div>
       <div className="navbar-end gap-4">
-        <Link to="/signin">
-          <button className='btn btn-outline min-h-12 px-7 text-[#606060] rounded-lg border border-[#DADADA] font-medium hover:-translate-y-0.5 duration-400 text-[16px]'>
-            Sign In
-          </button>
-        </Link>
-        <span className="hidden md:block">
-          <PrimaryButton>Be a Rider</PrimaryButton>
-        </span>
+        {
+          user?.email ? (
+            <button onClick={handleSignOut} className='btn btn-outline min-h-12 px-7 text-[#606060] rounded-lg border border-[#DADADA] font-medium hover:-translate-y-0.5 duration-400 text-[16px]'>
+              Sign Out
+            </button>
+          ) : (
+            <>
+              <Link to="/signin">
+                <button className='btn btn-outline min-h-12 px-7 text-[#606060] rounded-lg border border-[#DADADA] font-medium hover:-translate-y-0.5 duration-400 text-[16px]'>
+                  Sign In
+                </button>
+              </Link>
+              <span className="hidden md:block">
+                <PrimaryButton>Be a Rider</PrimaryButton>
+              </span>
+            </>
+          )
+        }
       </div>
     </div>
   );
