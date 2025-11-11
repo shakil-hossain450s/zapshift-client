@@ -9,15 +9,15 @@ const Signin = () => {
   const [showPassword, setShowPassword] = useState(false);
   const { register, handleSubmit, formState: { errors } } = useForm();
 
-  const handleLogin = (data) => {
+  const handleSignIn = (data) => {
     console.log(data);
   }
 
   return (
     <section className='max-w-sm'>
       <h2 className='text-4xl font-bold mb-3'>Welcome Back</h2>
-      <p>Login with ZapShift</p>
-      <form onSubmit={handleSubmit(handleLogin)} className='mt-4 space-y-3'>
+      <p>Signin with ZapShift</p>
+      <form onSubmit={handleSubmit(handleSignIn)} className='mt-4 space-y-3'>
         {/* email */}
         <div>
           <label htmlFor='email' className='text-[#0F172AFF]'>Email *</label>
