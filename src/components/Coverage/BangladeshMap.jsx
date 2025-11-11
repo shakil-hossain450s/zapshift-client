@@ -4,7 +4,6 @@ import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import wearhouseData from "../../assets/data/warehouses.json";
 
-// Fix Leaflet’s default marker icons not showing
 import markerIcon2x from "leaflet/dist/images/marker-icon-2x.png";
 import markerIcon from "leaflet/dist/images/marker-icon.png";
 import markerShadow from "leaflet/dist/images/marker-shadow.png";
@@ -44,10 +43,10 @@ const BangladeshMap = ({ searchTerm = "" }) => {
       : null;
 
   return (
-    <div data-aos='fade-up' className="h-[400px] w-full rounded-md overflow-hidden shadow-lg border border-gray-200">
+    <div data-aos='fade-up' className="h-[600px] w-full rounded-md overflow-hidden shadow-lg border border-gray-200">
       <MapContainer
         center={[23.685, 90.3563]}
-        zoom={6}
+        zoom={7}
         scrollWheelZoom={true}
         style={{ height: "100%", width: "100%" }}
       >
