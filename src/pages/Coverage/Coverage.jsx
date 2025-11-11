@@ -17,8 +17,9 @@ const Coverage = () => {
         <div className='max-w-sm flex items-center gap-3 bg-[#CBD5E14D] rounded px-3 py-1 rounded-l-full'>
           <span className='text-sm text-[#1F1F1F]'><FaSearch /></span>
           <input
-            type='text'
+            type='search'
             placeholder='Search'
+            name='search'
             className='text-[#1F1F1F] outline-none'
             onChange={(e) => setSearchTerm(e.target.value)}
           />
