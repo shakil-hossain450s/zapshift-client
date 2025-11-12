@@ -5,7 +5,7 @@ const PageHeading = ({ title, description }) => {
         <h1 data-aos='fade-right' className='text-2xl mb-4 md:text-4xl lg:text-5xl font-bold text-[#03373D]'>{title}</h1>
         <p data-aos='fade-right' className='text-[#606060]'>{description}</p>
       </div>
-      <div className='border-b border-[#0000001A] w-full my-8'></div>
+      <div className='border-b border-[#0000001A] w-full my-3 md:my-8'></div>
     </>
   );
 };

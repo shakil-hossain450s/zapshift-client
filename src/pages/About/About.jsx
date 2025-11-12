@@ -12,7 +12,7 @@ const About = () => {
       />
       <div className='min-h-60'>
         <Tabs>
-          <TabList data-aos="fade-right" className="flex space-x-4 flex-wrap space-y-3 border-b-0 mb-4 md:mb-6">
+          <TabList data-aos="fade-right" className="flex space-x-4 flex-wrap space-y-3 md:space-y-0 border-b-0 mb-4">
             <Tab
               className="px-3 text-lg cursor-pointer focus:outline-none hover:text-[#5B6A2E]"
               selectedClassName="text-[#5B6A2E] font-bold"
