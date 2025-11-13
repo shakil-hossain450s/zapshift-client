@@ -1,4 +1,4 @@
-import { createBrowserRouter } from "react-router";
+import { createBrowserRouter, Navigate } from "react-router";
 import Home from "../pages/Home/Home";
 import RootLayout from "../layouts/RootLayout";
 import AuthLayout from "../layouts/AuthLayout";
@@ -43,6 +43,10 @@ const router = createBrowserRouter([
       <DashboardLayout></DashboardLayout>
     </PrivateRoute>,
     children: [
+      {
+        index: true,
+        element: <Navigate to='/dashboard/my-parcels' replace />
+      },
       {
         path: "my-parcels",
         Component: MyParcels
