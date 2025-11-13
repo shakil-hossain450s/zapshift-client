@@ -9,10 +9,15 @@ const Navbar = () => {
 
   const links = <>
     <li><NavLink to="/">Home</NavLink></li>
-    <li><NavLink to="/add-percel">Add Percel</NavLink></li>
+    <li><NavLink to="/add-parcel">Add Percel</NavLink></li>
     <li><NavLink to="/coverage">Coverage</NavLink></li>
     <li><NavLink to="/about">About Us</NavLink></li>
     <li><NavLink to="/pricing">Pricing</NavLink></li>
+    {
+      user && <>
+        <li><NavLink to="/dashboard">Dashboard</NavLink></li>
+      </>
+    }
     <li><NavLink to="/be-a-rider">Be a Rider</NavLink></li>
   </>
 

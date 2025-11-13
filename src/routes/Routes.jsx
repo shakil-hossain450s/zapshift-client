@@ -1,5 +1,5 @@
 import { createBrowserRouter } from "react-router";
-import Home from "../pages/Home";
+import Home from "../pages/Home/Home";
 import RootLayout from "../layouts/RootLayout";
 import AuthLayout from "../layouts/AuthLayout";
 import Signin from "../pages/Authentication/Signin/Signin";
@@ -9,6 +9,8 @@ import About from "../pages/About/About";
 import ErrorPage from "../pages/ErrorPage/ErrorPage";
 import AddParcel from "../pages/AddParcel/AddParcel";
 import PrivateRoute from "./PrivateRoute";
+import DashboardLayout from "../layouts/DashboardLayout";
+import MyParcels from "../pages/Dashboard/MyParcels/MyParcels";
 
 const router = createBrowserRouter([
   {
@@ -24,7 +26,7 @@ const router = createBrowserRouter([
           <AddParcel />
         </PrivateRoute>
       },
-      // { path: '*', Component: ErrorPage }
+      { path: '*', Component: ErrorPage }
     ],
   },
   {
@@ -33,6 +35,24 @@ const router = createBrowserRouter([
     children: [
       { path: "signin", Component: Signin },
       { path: "register", Component: Register },
+    ]
+  },
+  {
+    path: "dashboard",
+    element: <PrivateRoute>
+      <DashboardLayout></DashboardLayout>
+    </PrivateRoute>,
+    children: [
+      {
+        path: "my-parcels",
+        Component: MyParcels
+      },
+      {
+        path: 'add-parcel',
+        element: <PrivateRoute>
+          <AddParcel />
+        </PrivateRoute>
+      },
     ]
   }
 ]);
