@@ -1,12 +1,9 @@
-import React from 'react';
 import { Link, NavLink, Outlet } from 'react-router';
 import logo from '../assets/images/logo.png'
-import { FaBars } from 'react-icons/fa';
 
 const DashboardLayout = () => {
   const links = <>
     <li><NavLink to='/dashboard/my-parcels'>My Parcels</NavLink></li>
-    <li><NavLink to='/dashboard/add-parcel'>Add Parcel</NavLink></li>
   </>
   return (
     <section className='bg-[#EAECE9FF]'>

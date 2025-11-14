@@ -1,19 +1,29 @@
 import React from 'react';
-import { FaBox, FaClock, FaEye, FaMoneyBillWave, FaTrash } from 'react-icons/fa';
+import { FaBox, FaClock, FaEye, FaMoneyBillWave, FaTrash, FaCreditCard } from 'react-icons/fa';
+import { Link } from 'react-router';
 
+const MyParcelRow = ({ parcel, index, handleView, handleDelete, handlePay }) => {
+  const {
+    _id,
+    trackingId,
+    parcelName,
+    parcelType,
+    deliveryCost,
+    paymentMethod,
+    paymentStatus,
+    parcelStatus,
+    createdAtReadable
+  } = parcel;
 
-const MyParcelRow = ({ parcel, index , handleView, handleDelete}) => {
-
-  const { _id, trackingId, parcelName, parcelType, deliveryCost, paymentMethod, paymentStatus, parcelStatus, createdAtReadable } = parcel;
   return (
     <tr className="hover:bg-gray-50">
       <td>{index + 1}</td>
-      <td className="font-mono text-green-700 font-medium">
-        {trackingId}
-      </td>
+      <td className="font-mono text-green-700 font-medium">{trackingId}</td>
       <td className='flex gap-1'>
         {parcelName}
-        <span className='badge badge-sm text-[10px]'>{parcelType.charAt(0).toUpperCase() + parcelType.slice(1)}</span>
+        <span className='badge badge-sm text-[10px]'>
+          {parcelType.charAt(0).toUpperCase() + parcelType.slice(1)}
+        </span>
       </td>
       <td>৳{deliveryCost}</td>
       <td className="flex items-center gap-1">
@@ -47,8 +57,17 @@ const MyParcelRow = ({ parcel, index , handleView, handleDelete}) => {
         {createdAtReadable || "-"}
       </td>
 
-      {/* 🔹 View & Delete Buttons */}
+      {/* 🔹 Action Buttons */}
       <td className="flex items-center justify-center gap-3">
+        <Link to={`/dashboard/payment/${_id}`}>
+          <button
+            onClick={() => handlePay(parcel)}
+            disabled={paymentStatus.toLowerCase() === 'paid'}
+            className={`btn btn-sm bg-green-500 text-white flex items-center gap-1 
+              disabled:bg-gray-300 disabled:text-gray-600 disabled:cursor-not-allowed`}
+          >
+            <FaCreditCard /> {paymentStatus.toLowerCase() === 'paid' ? 'Paid' : 'Pay'}
+          </button></Link>
         <button
           onClick={() => handleView(parcel)}
           className="btn btn-sm cursor-pointer bg-blue-500 text-white"
@@ -56,6 +75,7 @@ const MyParcelRow = ({ parcel, index , handleView, handleDelete}) => {
         >
           <FaEye />
         </button>
+
         <button
           onClick={() => handleDelete(parcel)}
           className="btn btn-sm cursor-pointer bg-red-500 text-white"
@@ -63,6 +83,9 @@ const MyParcelRow = ({ parcel, index , handleView, handleDelete}) => {
         >
           <FaTrash />
         </button>
+
+
+
       </td>
     </tr>
   );

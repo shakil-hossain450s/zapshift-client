@@ -11,6 +11,7 @@ import AddParcel from "../pages/AddParcel/AddParcel";
 import PrivateRoute from "./PrivateRoute";
 import DashboardLayout from "../layouts/DashboardLayout";
 import MyParcels from "../pages/Dashboard/MyParcels/MyParcels";
+import Payment from "../pages/Payment/Payment";
 
 const router = createBrowserRouter([
   {
@@ -21,7 +22,7 @@ const router = createBrowserRouter([
       { path: 'coverage', Component: Coverage },
       { path: 'about', Component: About },
       {
-        path: 'add-percel',
+        path: 'add-parcel',
         element: <PrivateRoute>
           <AddParcel />
         </PrivateRoute>
@@ -52,10 +53,8 @@ const router = createBrowserRouter([
         Component: MyParcels
       },
       {
-        path: 'add-parcel',
-        element: <PrivateRoute>
-          <AddParcel />
-        </PrivateRoute>
+        path: 'payment/:parcelId',
+        Component: Payment
       },
     ]
   }

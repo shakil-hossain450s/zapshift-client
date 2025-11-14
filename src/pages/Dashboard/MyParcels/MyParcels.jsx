@@ -5,12 +5,15 @@ import { FaBox } from 'react-icons/fa';
 import MyParcelRow from '../../../components/MyParcel/MyParcelRow';
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+// import { useNavigate } from 'react-router';
 const MySwal = withReactContent(Swal);
 
 const MyParcels = () => {
   const { user } = useAuth();
   const axiosSecure = useAxiosSecure();
   const queryClient = useQueryClient();
+  // const navigate = useNavigate();
+
   const { data: parcels = [], isPending, isError } = useQuery({
     queryKey: ['parcels', user?.email],
     enabled: !!user?.email,
@@ -73,6 +76,8 @@ const MyParcels = () => {
       queryClient.invalidateQueries(['parcels', user?.email]);
     }
   })
+
+  // handle view for the parcel
   const handleView = (parcel) => {
     const getStatusColor = (status) => {
       const statusColors = {
@@ -400,6 +405,7 @@ const MyParcels = () => {
     });
   };
 
+  // handle delete method
   const handleDelete = async (parcel) => {
     const result = await Swal.fire({
       title: '<div style="font-size: 1.5rem; font-weight: 700; color: #dc2626; margin-bottom: 8px;">Confirm Deletion</div>',
@@ -463,6 +469,12 @@ const MyParcels = () => {
 
   }
 
+  // handle pay mehtod
+  const handlePay = (/*parcel*/) => {
+    // console.log(`/payment/:${parcel._id}`);
+    // navigate(`/dashboard/payment/:${parcel._id}`);
+  }
+
   if (isPending) return <p>Loading parcels...</p>
   if (isError) {
     return <div className="text-center py-10">
@@ -515,7 +527,7 @@ const MyParcels = () => {
             </thead >
             <tbody>
               {parcels.map((parcel, index) => (
-                <MyParcelRow key={parcel._id} parcel={parcel} index={index} handleView={handleView} handleDelete={handleDelete} />
+                <MyParcelRow key={parcel._id} parcel={parcel} index={index} handleView={handleView} handleDelete={handleDelete} handlePay={handlePay} />
               ))}
             </tbody>
           </table >
