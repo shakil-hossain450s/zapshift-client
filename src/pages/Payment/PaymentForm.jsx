@@ -1,10 +1,10 @@
 import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js';
 import { useQuery } from '@tanstack/react-query';
 import React, { useState } from 'react';
-import { useParams } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 import useAxiosSecure from '../../hooks/useAxiosSecure';
-import toast from 'react-hot-toast';
 import useAuth from '../../hooks/useAuth';
+import Swal from 'sweetalert2';
 
 const PaymentForm = () => {
   const { user } = useAuth();
@@ -12,10 +12,9 @@ const PaymentForm = () => {
   const elements = useElements();
   const [errorMessage, setErrorMessage] = useState('');
   const [loading, setLoading] = useState(false);
-
   const axiosSecure = useAxiosSecure();
   const { parcelId } = useParams();
-
+  const navigate = useNavigate();
 
   const { data: { parcel } = {}, isPending, isError } = useQuery({
     queryKey: ['parcel'],
@@ -74,6 +73,7 @@ const PaymentForm = () => {
 
         console.log(data);
 
+        // confirm payment
         const { error, paymentIntent } = await stripe.confirmCardPayment(data.clientSecret, {
           payment_method: {
             card: elements.getElement(CardElement),
@@ -89,9 +89,43 @@ const PaymentForm = () => {
           console.error(error);
         } else if (paymentIntent.status === 'succeeded') {
           setErrorMessage('');
-          toast.success('payment successfull!', {
-            position: 'top-right'
-          })
+          console.log(paymentIntent);
+
+          // payment data
+          const paymentData = {
+            parcelId: parcel._id,
+            email: user.email,
+            amount: parcel.deliveryCost,
+            transactionId: paymentIntent.id,
+            paymentMethod: paymentIntent.payment_method_types[0],
+            status: "Paid",
+          };
+
+          // set payement history to db
+          const { data } = await axiosSecure.post('/payments/success', paymentData);
+
+          // console.log(data);
+          if (data.success) {
+            Swal.fire({
+              title: 'Payment Successful!',
+              html: `
+                <p><strong>Parcel ID:</strong> ${paymentData.parcelId}</p>
+                <p><strong>Email:</strong> ${paymentData.email}</p>
+                <p><strong>Amount Paid:</strong> ৳${parcel.deliveryCost}</p>
+                <p><strong>Transaction ID:</strong> ${paymentData.transactionId}</p>
+                <p><strong>Payment Method:</strong> ${paymentData.paymentMethod}</p>
+                <p><strong>Status:</strong> ${paymentData.status}</p>
+              `,
+              icon: 'success',
+              confirmButtonText: 'OK',
+              showCloseButton: true,
+              customClass: {
+                popup: 'rounded-xl p-6 shadow-lg border border-gray-200'
+              }
+            });
+            navigate('/dashboard/my-parcels')
+          }
+
         }
 
       } catch (err) {

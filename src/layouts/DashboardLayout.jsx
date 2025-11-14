@@ -1,9 +1,38 @@
 import { Link, NavLink, Outlet } from 'react-router';
 import logo from '../assets/images/logo.png'
+import { FaBox, FaMoneyCheckAlt, FaMapMarkerAlt, FaUserEdit } from 'react-icons/fa';
 
 const DashboardLayout = () => {
   const links = <>
-    <li><NavLink to='/dashboard/my-parcels'>My Parcels</NavLink></li>
+    <li className="mb-2">
+      <NavLink to='/dashboard/my-parcels'>
+        <FaBox className="text-blue-500" />
+        My Parcels
+      </NavLink>
+    </li>
+
+    <li className="mb-2">
+      <NavLink to='/dashboard/payment-history'>
+        <FaMoneyCheckAlt className="text-green-500" />
+        Payment History
+      </NavLink>
+    </li>
+
+    <li className="mb-2">
+
+      <NavLink to='/dashboard/track-parcel'>
+        <FaMapMarkerAlt className="text-yellow-500" />
+        Track a Package
+      </NavLink>
+    </li>
+
+    <li className="mb-2">
+
+      <NavLink to='/dashboard/update-profile'>
+        <FaUserEdit className="text-purple-500" />
+        Update Profile
+      </NavLink>
+    </li>
   </>
   return (
     <section className='bg-[#EAECE9FF]'>
