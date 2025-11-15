@@ -5,14 +5,14 @@ import { FaBox } from 'react-icons/fa';
 import MyParcelRow from '../../../components/MyParcel/MyParcelRow';
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
-// import { useNavigate } from 'react-router';
+import { useNavigate } from 'react-router';
 const MySwal = withReactContent(Swal);
 
 const MyParcels = () => {
   const { user } = useAuth();
   const axiosSecure = useAxiosSecure();
   const queryClient = useQueryClient();
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const { data: parcels = [], isPending, isError } = useQuery({
     queryKey: ['parcels', user?.email],
@@ -470,9 +470,9 @@ const MyParcels = () => {
   }
 
   // handle pay mehtod
-  const handlePay = (/*parcel*/) => {
+  const handlePay = (parcel) => {
     // console.log(`/payment/:${parcel._id}`);
-    // navigate(`/dashboard/payment/:${parcel._id}`);
+    navigate(`/dashboard/payment/${parcel._id}`);
   }
 
   if (isPending) return <p>Loading parcels...</p>

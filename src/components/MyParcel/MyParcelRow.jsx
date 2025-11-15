@@ -32,8 +32,8 @@ const MyParcelRow = ({ parcel, index, handleView, handleDelete, handlePay }) => 
           {paymentMethod}
           <span
             className={`ml-1 text-xs px-2 py-0.5 rounded-full ${paymentStatus === "Paid"
-              ? "bg-green-100 text-green-700"
-              : "bg-yellow-100 text-yellow-700"
+                ? "bg-green-100 text-green-700"
+                : "bg-yellow-100 text-yellow-700"
               }`}
           >
             {paymentStatus}
@@ -43,10 +43,10 @@ const MyParcelRow = ({ parcel, index, handleView, handleDelete, handlePay }) => 
       <td>
         <span
           className={`text-xs font-medium px-2 py-1 rounded-full ${parcelStatus === "Delivered"
-            ? "bg-green-100 text-green-700"
-            : parcelStatus === "Processing"
-              ? "bg-blue-100 text-blue-700"
-              : "bg-gray-100 text-gray-700"
+              ? "bg-green-100 text-green-700"
+              : parcelStatus === "Processing"
+                ? "bg-blue-100 text-blue-700"
+                : "bg-gray-100 text-gray-700"
             }`}
         >
           {parcelStatus}
@@ -58,16 +58,16 @@ const MyParcelRow = ({ parcel, index, handleView, handleDelete, handlePay }) => 
       </td>
 
       {/* 🔹 Action Buttons */}
-      <td className="flex items-center justify-center gap-3">
-        <Link to={`/dashboard/payment/${_id}`}>
-          <button
-            onClick={() => handlePay(parcel)}
-            disabled={paymentStatus.toLowerCase() === 'paid'}
-            className={`btn btn-sm bg-green-500 text-white flex items-center gap-1 
-              disabled:bg-gray-300 disabled:text-gray-600 disabled:cursor-not-allowed`}
-          >
-            <FaCreditCard /> {paymentStatus.toLowerCase() === 'paid' ? 'Paid' : 'Pay'}
-          </button></Link>
+      <td className="flex items-center justify-center gap-3 !cursor-default">
+
+        <button
+          onClick={() => handlePay(parcel)}
+          disabled={paymentStatus === 'Paid'}
+          className={`btn btn-sm bg-green-500 text-white disabled:bg-gray-600 ${paymentStatus.toLowerCase() === "paid" ? "force-not-allowed" : ""}`}
+        >
+          <FaCreditCard /> {paymentStatus.toLowerCase() === 'paid' ? 'Paid' : 'Pay'}
+        </button>
+
         <button
           onClick={() => handleView(parcel)}
           className="btn btn-sm cursor-pointer bg-blue-500 text-white"
@@ -78,13 +78,12 @@ const MyParcelRow = ({ parcel, index, handleView, handleDelete, handlePay }) => 
 
         <button
           onClick={() => handleDelete(parcel)}
-          className="btn btn-sm cursor-pointer bg-red-500 text-white"
+          disabled={paymentStatus.toLowerCase() === "paid"}
+          className={`btn btn-sm bg-red-500 text-white disabled:bg-gray-600 ${paymentStatus.toLowerCase() === "paid" ? "force-not-allowed" : ""}`}
           title="Delete Parcel"
         >
           <FaTrash />
         </button>
-
-
 
       </td>
     </tr>

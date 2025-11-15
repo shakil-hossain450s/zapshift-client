@@ -3,31 +3,69 @@ import { Link, useLocation, useNavigate } from 'react-router';
 import SocialLogin from '../../../components/SocialLogin/SocialLogin';
 import { useForm } from 'react-hook-form';
 import { useState } from 'react';
-import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import { FaEye, FaEyeSlash, FaUserPlus } from 'react-icons/fa';
 import useAuth from '../../../hooks/useAuth';
 import toast from 'react-hot-toast';
+import axios from 'axios';
 
 const Register = () => {
+  const { createUser, updateUserProfile } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
-  const { createUser } = useAuth();
-  const navigate = useNavigate();
+  const [preview, setPreview] = useState(null);
+  const [image, setImage] = useState(null);
+  const [loading, setLoading] = useState(false);
+
   const location = useLocation();
+  const navigate = useNavigate();
 
   const from = location.state?.from?.pathname || '/';
 
   const { register, handleSubmit, formState: { errors } } = useForm();
+
   const handleRegister = async (data) => {
-    const { email, password } = data;
+    const { email, password, username } = data;
+
+    const defaultAvatar = "https://i.ibb.co/user-icon.png";
+    const imageUrl = image ? await uploadToImgBB() : defaultAvatar;
+    
+    // console.log(username);
+    // return console.log({ username, email, password, imageUrl})
     try {
+      setLoading(true);
+
       const result = await createUser(email, password);
       console.log(result);
+
       if (result.user) {
+        await updateUserProfile(username, imageUrl);
         toast.success('Registration successfully!');
         navigate(from);
       }
+
+
     } catch (err) {
-      console.log(err);
+      console.log(err || 'Registration Failed.');
+    } finally {
+      setLoading(false);
     }
+  }
+
+  const uploadToImgBB = async () => {
+    const form = new FormData();
+    form.append('image', image);
+
+    const { data } = await axios.post(
+      `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_IMAGE_UPLOAD_KEY}`,
+      form
+    );
+
+    return data.data.url;
+  }
+
+  const handleImageChange = (e) => {
+    const image = e.target.files[0];
+    setImage(image);
+    setPreview(URL.createObjectURL(image));
   }
 
   return (
@@ -35,12 +73,34 @@ const Register = () => {
       <h2 className='text-4xl font-bold mb-3'>Create an account</h2>
       <p>Register with ZapShift</p>
       <form onSubmit={handleSubmit(handleRegister)} className='mt-4 space-y-3'>
+        {/* image */}
+        <div>
+          <label className="cursor-pointer">
+            {preview ? (
+              <img
+                src={preview}
+                className="w-10 h-10 rounded-full object-cover border shadow-md"
+              />
+            ) : (
+              <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center shadow text-gray-500">
+                <FaUserPlus className="" />
+              </div>
+            )}
+
+            <input
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={handleImageChange}
+            />
+          </label>
+        </div>
         {/* name */}
         <div>
-          <label htmlFor='name' className='text-[#0F172AFF]'>Name *</label>
+          <label htmlFor='username' className='text-[#0F172AFF]'>Name *</label>
           <input
             type='text'
-            {...register('name', {
+            {...register('username', {
               required: true,
             })}
             placeholder='Name'
@@ -84,10 +144,14 @@ const Register = () => {
           {errors.password?.type === 'minLength' && <p className='text-red-500'>password must be 6 charecter or long!</p>}
         </div>
         <PrimaryButton widthFull={true}>
-          Register
+          {!loading ? 'Signin' : <span className="loading loading-spinner loading-md"></span>}
         </PrimaryButton>
         <div className='text-[#71717A]'>
-          <p>Already have an account? <Link to="/signin" className='ml-1 text-[#8FA748] hover:underline'>Signin</Link></p>
+          <p>Already have an account?
+            <Link to="/signin" className='ml-1 text-[#8FA748] hover:underline'>
+              Sign in
+            </Link>
+          </p>
           <p className='text-center my-3'>Or</p>
           <SocialLogin>
             Register with Google

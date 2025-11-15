@@ -15,5 +15,9 @@ a.active {
   /* color: #303030; */
   color: white;
   font-weight: 500;
+}
 
+.force-not-allowed {
+  cursor: not-allowed !important;
+  pointer-events: auto !important; /* allows cursor update */
 }
