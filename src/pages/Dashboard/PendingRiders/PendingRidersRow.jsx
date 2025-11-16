@@ -2,7 +2,7 @@ import { FaCheck, FaEye, FaTimes } from 'react-icons/fa';
 
 const PendingRidersRow = ({ rider, index, handleViewRider, handleUpdateStatus }) => {
   return (
-    <tr key={rider._id} className="hover:bg-gray-50">
+    <tr data-aos="fade-right" key={rider._id} className="hover:bg-gray-50">
       <td>{index + 1}</td>
 
       {/* Name */}

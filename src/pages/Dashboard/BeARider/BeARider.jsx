@@ -66,7 +66,7 @@ const BeARider = () => {
     <section className="mt-4 w-full flex flex-col md:flex-row items-center justify-center mb-10 bg-white rounded-2xl p-6 md:p-10">
 
       {/* LEFT — FORM */}
-      <div className="w-full md:w-1/2">
+      <div data-aos='fade-right' className="w-full md:w-1/2">
         <PageHeading
           title="Be a Rider"
           description="Become a delivery partner and start earning fast with flexible timings."
@@ -185,7 +185,7 @@ const BeARider = () => {
           </div>
 
           {/* Submit Button */}
-          <div className="col-span-12">
+          <div data-aos='fade-up' className="col-span-12">
             <PrimaryButton className="w-full">
               Submit Application
             </PrimaryButton>
@@ -195,7 +195,7 @@ const BeARider = () => {
       </div>
 
       {/* RIGHT — LOTTIE IMAGE */}
-      <div className="hidden lg:flex w-1/2 justify-center">
+      <div data-aos="fade-left" className="hidden lg:flex w-1/2 justify-center">
         <Lottie animationData={beARiderImage} className="max-w-lg" />
       </div>
 

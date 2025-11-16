@@ -29,7 +29,7 @@ const PaymentHistory = () => {
   console.log(paymentsHistory);
 
   return (
-    <div className="overflow-x-auto">
+    <div data-aos='fade-right' className="overflow-x-auto">
       <table className="table w-full rounded-lg shadow-sm">
         {/* Table Head */}
         <thead>

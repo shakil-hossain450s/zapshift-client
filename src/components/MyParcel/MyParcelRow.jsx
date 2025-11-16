@@ -16,7 +16,7 @@ const MyParcelRow = ({ parcel, index, handleView, handleDelete, handlePay }) => 
   } = parcel;
 
   return (
-    <tr className="hover:bg-gray-50">
+    <tr data-aos="fade-right" className="hover:bg-gray-50">
       <td>{index + 1}</td>
       <td className="font-mono text-green-700 font-medium">{trackingId}</td>
       <td className='flex gap-1'>

@@ -239,7 +239,7 @@ const PendingRiders = () => {
   console.log(pendingRiders);
 
   return (
-    <div>
+    <div data-aos='fade-right'>
       <h2 className="text-2xl font-semibold mb-4 flex items-center gap-2">
         <FaHourglassHalf className="text-green-600" /> Pending Riders
       </h2>

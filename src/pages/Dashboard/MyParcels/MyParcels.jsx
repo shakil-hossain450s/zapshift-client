@@ -501,7 +501,7 @@ const MyParcels = () => {
   console.log(parcels);
 
   return (
-    <div>
+    <div data-aos='fade-right'>
       <h2 className="text-2xl font-semibold mb-4 flex items-center gap-2">
         <FaBox className="text-green-600" /> My Parcels
       </h2>

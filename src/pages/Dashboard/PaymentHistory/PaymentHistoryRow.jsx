@@ -4,7 +4,7 @@ import { FaMoneyBillWave, FaClock, FaReceipt } from "react-icons/fa";
 const PaymentHistoryRow = ({ payment, index }) => {
   console.log(payment);
   return (
-    <tr className="hover:bg-gray-50">
+    <tr data-aos="fade-right" className="hover:bg-gray-50">
       <td>{index + 1}</td>
       <td className="font-mono text-blue-600">{payment.parcelId}</td>
       <td className="flex items-center gap-1 text-green-700">
