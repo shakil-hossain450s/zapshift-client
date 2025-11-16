@@ -13,6 +13,7 @@ import DashboardLayout from "../layouts/DashboardLayout";
 import MyParcels from "../pages/Dashboard/MyParcels/MyParcels";
 import Payment from "../pages/Payment/Payment";
 import PaymentHistory from "../pages/Dashboard/PaymentHistory/PaymentHistory";
+import BeARider from "../pages/Dashboard/BeARider/BeARider";
 
 const router = createBrowserRouter([
   {
@@ -26,6 +27,12 @@ const router = createBrowserRouter([
         path: 'add-parcel',
         element: <PrivateRoute>
           <AddParcel />
+        </PrivateRoute>
+      },
+      {
+        path: 'be-a-rider',
+        element: <PrivateRoute>
+          <BeARider></BeARider>
         </PrivateRoute>
       },
       { path: '*', Component: ErrorPage }

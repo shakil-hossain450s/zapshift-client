@@ -7,7 +7,6 @@ import PrimaryButton from "../../components/PrimaryButton";
 import warehouseData from "../../assets/data/warehouses.json";
 import useAuth from "../../hooks/useAuth";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
-import axios from "axios";
 
 const AddParcel = () => {
   const { user } = useAuth();
@@ -19,7 +18,6 @@ const AddParcel = () => {
     handleSubmit,
     watch,
     setValue,
-    formState: { errors },
   } = useForm({
     defaultValues: {
       parcelType: "non-document",
@@ -207,7 +205,7 @@ const AddParcel = () => {
         }
 
       } else {
-        toast((t) => (
+        toast(() => (
           <div className="bg-white rounded-lg p-3 shadow-sm border">
             <div className="text-sm text-gray-800 font-medium">You can edit your parcel details now.</div>
           </div>
