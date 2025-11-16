@@ -1,11 +1,13 @@
 import toast from "react-hot-toast";
 import useAuth from "../../hooks/useAuth";
 import { useLocation, useNavigate } from "react-router";
+import useAxiosCommon from "../../hooks/useAxiosCommon";
 
 const SocialLogin = ({ children }) => {
   const { signInWithGoogle } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+  const axiosCommon = useAxiosCommon();
 
   const from = location.state?.from?.pathname || '/';
 
@@ -13,9 +15,24 @@ const SocialLogin = ({ children }) => {
     try {
       const result = await signInWithGoogle();
       console.log(result);
-      if (result.user) {
+      const user = result.user;
+      
+
+      if (user) {
+
+        const userData = {
+          username: user?.displayName,
+          email: user?.email,
+          photo: user?.photoURL,
+          role: 'user',
+          provider: 'google'
+        }
+
+        const { data } = await axiosCommon.post('/saveUser', userData);
+        console.log(data);
+
         toast.success('Logged in successfully');
-        navigate(from)
+        navigate(from);
       }
     } catch (err) {
       console.log(err);

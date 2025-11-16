@@ -7,6 +7,7 @@ import { FaEye, FaEyeSlash, FaUserPlus } from 'react-icons/fa';
 import useAuth from '../../../hooks/useAuth';
 import toast from 'react-hot-toast';
 import axios from 'axios';
+import useAxiosCommon from '../../../hooks/useAxiosCommon';
 
 const Register = () => {
   const { createUser, updateUserProfile } = useAuth();
@@ -18,6 +19,8 @@ const Register = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
+  const axiosCommon = useAxiosCommon();
+
   const from = location.state?.from?.pathname || '/';
 
   const { register, handleSubmit, formState: { errors } } = useForm();
@@ -27,7 +30,7 @@ const Register = () => {
 
     const defaultAvatar = "https://i.ibb.co/user-icon.png";
     const imageUrl = image ? await uploadToImgBB() : defaultAvatar;
-    
+
     // console.log(username);
     // return console.log({ username, email, password, imageUrl})
     try {
@@ -36,8 +39,23 @@ const Register = () => {
       const result = await createUser(email, password);
       console.log(result);
 
-      if (result.user) {
+      const user = result.user;
+
+      if (user) {
         await updateUserProfile(username, imageUrl);
+
+        const userData = {
+          username: user?.displayName,
+          email: user?.email,
+          photo: user?.photoURL,
+          role: 'user',
+          provider: 'password'
+        }
+
+        const { data } = await axiosCommon.post('/saveUser', userData);
+
+        console.log(data);
+
         toast.success('Registration successfully!');
         navigate(from);
       }
