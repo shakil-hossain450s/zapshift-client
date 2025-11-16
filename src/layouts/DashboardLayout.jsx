@@ -1,6 +1,6 @@
 import { Link, NavLink, Outlet } from 'react-router';
 import logo from '../assets/images/logo.png'
-import { FaBox, FaMoneyCheckAlt, FaMapMarkerAlt, FaUserEdit } from 'react-icons/fa';
+import { FaBox, FaMoneyCheckAlt, FaMapMarkerAlt, FaUserEdit, FaUserCheck, FaUserClock } from 'react-icons/fa';
 
 const DashboardLayout = () => {
   const links = <>
@@ -33,6 +33,21 @@ const DashboardLayout = () => {
         Update Profile
       </NavLink>
     </li>
+
+    <li className="mb-2">
+      <NavLink to='/dashboard/active-riders'>
+        <FaUserCheck className="text-teal-500" />
+        Active Riders
+      </NavLink>
+    </li>
+
+    <li className="mb-2">
+      <NavLink to='/dashboard/pending-riders'>
+        <FaUserClock className="text-orange-500" />
+        Pending Riders
+      </NavLink>
+    </li>
+
   </>
   return (
     <section className='bg-[#EAECE9FF]'>
