@@ -1,24 +1,23 @@
-import React from "react";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
-import { FaBox, FaHourglassHalf } from "react-icons/fa";
+import { FaMotorcycle } from "react-icons/fa";
 import Swal from "sweetalert2";
 import { useQuery } from "@tanstack/react-query";
-import PendingRidersRow from "./PendingRidersRow";
+import ActiveRidersRow from "./ActiveRiderRow";
 
-const PendingRiders = () => {
+const ActiveRiders = () => {
   const axiosSecure = useAxiosSecure();
 
   // Fetch pending riders
-  const { data: pendingRiders = [], isPending, isError, refetch } = useQuery({
-    queryKey: ['pending-riders'],
+  const { data: activeRiders = [], isPending, isError, refetch } = useQuery({
+    queryKey: ['active-riders'],
     queryFn: async () => {
-      const { data } = await axiosSecure('/pendingRiders');
-      return data.pendingRiders || [];
+      const { data } = await axiosSecure('/activeRiders');
+      return data.activeRiders || [];
     }
   })
 
   // handle details view
-  const handleView = (rider) => {
+  const handleViewRider = (rider) => {
     Swal.fire({
       width: 700,
       background: "#ffffff",
@@ -27,28 +26,7 @@ const PendingRiders = () => {
       confirmButtonText: "Close Details",
       confirmButtonColor: "#4f46e5",
       title: `
-      <div class="flex flex-col items-center" style="margin-bottom: 0.5rem; margin-top: -20rem">
-        <div style="
-          width: 70px;
-          border-radius: 50%;
-          background: linear-gradient(to bottom right, #fef3c7, #f59e0b);
-          display:flex;
-          align-items:center;
-          justify-content:center;
-          box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-          border: 3px solid #f59e0b;
-        ">
-          <i class="fa fa-clock text-amber-600" style="font-size:28px;"></i>
-        </div>
-
-        <h2 style="
-          font-size:20px;
-          font-weight:700;
-          color:#1f2937;
-        ">
-          Pending Rider Details
-        </h2>
-      </div>
+        <h2 class="text-4xl -mb-10 -mt-16 text-center font-bold text-gray-900">Active Rider Details</h2>
     `,
       html: `
       <div style="padding: 0; margin-top: -10px;">
@@ -67,16 +45,15 @@ const PendingRiders = () => {
             ${rider.name}
           </h2>
           <div style="font-size:13px; opacity:0.9; margin-bottom:6px;">${rider.email}</div>
-          <div style="
+          <div class="bg-green-500" style="
             display: inline-block;
             padding: 4px 12px;
-            background: rgba(255,255,255,0.2);
             border-radius: 20px;
             font-size: 11px;
             font-weight: 600;
             backdrop-filter: blur(10px);
           ">
-            ⏳ PENDING APPROVAL
+             Active
           </div>
         </div>
 
@@ -164,9 +141,8 @@ const PendingRiders = () => {
             <div style="space-y-2">
               <p style="margin:6px 0; font-size:13px;">
                 <strong>Status:</strong> 
-                <span style="
+                <span class="bg-green-500" style="
                   padding:4px 10px;
-                  background:#f59e0b;
                   color:#fff;
                   border-radius: 20px;
                   font-size:11px;
@@ -190,63 +166,80 @@ const PendingRiders = () => {
     });
   };
 
-  // handle status update
-  const handleUpdateStatus = (riderId, action) => {
-    const isApprove = action === 'approved';
+const handleDeactivateRider = (rider, action) => {
+  Swal.fire({
+    width: 500,
+    padding: '0.2rem',
+    title: `
+        <h2 class="-mb-10 -mt-16 text-3xl text-center font-bold text-gray-900">Deactivate Rider</h2>
+    `,
+    html: `
+      <div style="padding: 0; margin-top: -8px;">
+        <!-- Rider Summary -->
+        <div style="background: #fef2f2; padding: 8px; border-radius: 6px; margin-bottom: 8px;">
+          <h3 style="font-weight: 600; color: #dc2626; margin-bottom: 4px; font-size: 20px;">Rider Information</h3>
+          <p style="margin: 2px 0; font-size: 16px;"><strong>Name:</strong> ${rider.name}</p>
+          <p style="margin: 2px 0; font-size: 16px;"><strong>Email:</strong> ${rider.email}</p>
+          <p style="margin: 2px 0; font-size: 16px;"><strong>Phone:</strong> ${rider.phone}</p>
+          <p style="margin: 2px 0; font-size: 16px;"><strong>Region:</strong> ${rider.region}</p>
+        </div>
 
-    Swal.fire({
-      title: `${isApprove ? 'Approve' : 'Reject'} Rider?`,
-      text: isApprove
-        ? "This rider will be approved and can start accepting deliveries."
-        : "This rider application will be rejected.",
-      icon: 'question',
-      showCancelButton: true,
-      confirmButtonColor: isApprove ? '#10b981' : '#ef4444',
-      cancelButtonColor: '#6b7280',
-      confirmButtonText: isApprove ? 'Yes, Approve!' : 'Yes, Reject!'
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        try {
-          const { data } = await axiosSecure.patch(`/rider/${riderId}/status`, {
-            status: isApprove ? 'approved' : 'rejected'
+        <!-- Consequences -->
+        <div style="background: #fffbeb; padding: 8px; border-radius: 6px; margin-bottom: 8px;">
+          <h3 style="font-weight: 600; color: #d97706; margin-bottom: 4px; font-size: 20px;">What will happen?</h3>
+          <ul style="color: #92400e; padding-left: 12px; margin: 0; font-size: 16px;">
+            <li style="margin-bottom: 2px;">Cannot accept new delivery requests</li>
+            <li>Active deliveries will be reassigned</li>
+          </ul>
+        </div>
+      </div>
+    `,
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#ef4444',
+    cancelButtonColor: '#6b7280',
+    confirmButtonText: 'Deactivate',
+    cancelButtonText: 'Cancel',
+    focusConfirm: false,
+    reverseButtons: true
+  }).then(async (result) => {
+    if (result.isConfirmed) {
+      try {
+        const { data } = await axiosSecure.patch(`/rider/${rider._id}/status`, {
+          status: action
+        });
+        
+        if (data.success) {
+          Swal.fire({
+            title: 'Deactivated!',
+            text: `${rider.name} has been deactivated.`,
+            icon: 'success',
+            confirmButtonColor: '#ef4444',
           });
-
-          console.log(data);
-          if (data.success) {
-            Swal.fire(
-              `${isApprove ? 'Approved!' : 'Rejected!'}`,
-              `Rider has been ${isApprove ? 'approved' : 'rejected'} successfully.`,
-              'success'
-            );
-            refetch(); // Refresh the data
-          }
-        } catch (err) {
-          console.log(err);
-          Swal.fire(
-            'Error!',
-            `Failed to ${isApprove ? 'approve' : 'reject'} rider.`,
-            'error'
-          );
+          refetch();
         }
+      } catch (err) {
+        Swal.fire('Error!', 'Failed to deactivate rider.', err);
       }
-    });
-  };
+    }
+  });
+};
 
 
   if (isPending) return <p>Loading...</p>;
   if (isError) return <p className="text-red-500">Error...</p>
 
-  console.log(pendingRiders);
+  console.log(activeRiders);
 
   return (
     <div>
       <h2 className="text-2xl font-semibold mb-4 flex items-center gap-2">
-        <FaHourglassHalf className="text-green-600" /> Pending Riders
+        <FaMotorcycle className="text-green-600" /> Active Riders
       </h2>
 
-      {pendingRiders.length === 0 ? (
+      {activeRiders.length === 0 ? (
         <div className="text-center py-10 text-gray-500">
-          No pending riders.
+          No active riders.
         </div>
       ) : (
         <div className="overflow-x-auto shadow rounded-lg border border-gray-200">
@@ -264,8 +257,8 @@ const PendingRiders = () => {
             </thead >
             <tbody>
               {
-                pendingRiders.map((rider, index) => (
-                  <PendingRidersRow key={rider._id} rider={rider} index={index} handleView={handleView} handleUpdateStatus={handleUpdateStatus} />
+                activeRiders.map((rider, index) => (
+                  <ActiveRidersRow key={rider._id} rider={rider} index={index} handleViewRider={handleViewRider} handleDeactivateRider={handleDeactivateRider} />
                 ))
               }
             </tbody>
@@ -276,4 +269,4 @@ const PendingRiders = () => {
   );
 };
 
-export default PendingRiders;
+export default ActiveRiders;

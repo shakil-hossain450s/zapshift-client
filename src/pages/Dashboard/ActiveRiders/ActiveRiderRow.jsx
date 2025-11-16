@@ -1,6 +1,7 @@
-import { FaCheck, FaEye, FaTimes } from 'react-icons/fa';
+import React from 'react';
+import { FaCheck, FaEye, FaTrash, FaUserSlash } from 'react-icons/fa';
 
-const PendingRidersRow = ({ rider, index, handleViewRider, handleUpdateStatus }) => {
+const ActiveRidersRow = ({ rider, index, handleViewRider, handleDeactivateRider }) => {
   return (
     <tr key={rider._id} className="hover:bg-gray-50">
       <td>{index + 1}</td>
@@ -29,7 +30,7 @@ const PendingRidersRow = ({ rider, index, handleViewRider, handleUpdateStatus })
       {/* Status */}
       <td>
         <span className={`text-xs font-medium px-2 py-1 rounded-full 
-            ${rider.status === 'pending' && 'bg-yellow-100 text-yellow-700'}
+            ${rider.status === 'approved' && 'bg-green-100 text-green-700'}
           `}>
           {rider.status}
         </span>
@@ -47,22 +48,13 @@ const PendingRidersRow = ({ rider, index, handleViewRider, handleUpdateStatus })
           <FaEye />
         </button>
 
-        {/* Accept Button */}
+        {/* Deactivate Button */}
         <button
-          onClick={() => handleUpdateStatus(rider._id, 'approved')}
-          className="btn btn-sm shadow-none border-0 bg-green-500 text-white hover:bg-green-600"
-          title="Accept Rider"
-        >
-          <FaCheck />
-        </button>
-
-        {/* Reject Button */}
-        <button
-          onClick={() => handleUpdateStatus(rider._id, 'rejected')}
+          onClick={() => handleDeactivateRider(rider, 'deactivate')}
           className="btn btn-sm shadow-none border-0 bg-red-500 text-white hover:bg-red-600"
-          title="Reject Rider"
+          title="Deactivate Rider"
         >
-          <FaTimes />
+          <FaUserSlash />
         </button>
 
       </td>
@@ -71,4 +63,4 @@ const PendingRidersRow = ({ rider, index, handleViewRider, handleUpdateStatus })
   );
 };
 
-export default PendingRidersRow;
+export default ActiveRidersRow;

@@ -40,7 +40,7 @@ const BeARider = () => {
   const onSubmit = async (data) => {
     const riderData = {
       ...data,
-      status: "Pending",
+      status: "pending",
       appliedAt: new Date().toISOString(),
     };
 
