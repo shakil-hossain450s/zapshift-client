@@ -3,7 +3,7 @@ import { FaCheck, FaEye, FaTrash, FaUserSlash } from 'react-icons/fa';
 
 const ActiveRidersRow = ({ rider, index, handleViewRider, handleDeactivateRider }) => {
   return (
-    <tr data-aos="fade-right" key={rider._id} className="hover:bg-gray-50">
+    <tr key={rider._id} className="hover:bg-gray-50">
       <td>{index + 1}</td>
 
       {/* Name */}
@@ -32,7 +32,7 @@ const ActiveRidersRow = ({ rider, index, handleViewRider, handleDeactivateRider 
         <span className={`text-xs font-medium px-2 py-1 rounded-full 
             ${rider.status === 'approved' && 'bg-green-100 text-green-700'}
           `}>
-          {rider.status}
+          {rider.status === 'approved' && 'active'}
         </span>
       </td>
 

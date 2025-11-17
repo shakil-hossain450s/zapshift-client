@@ -2,7 +2,7 @@ import { FaCheck, FaEye, FaTimes } from 'react-icons/fa';
 
 const PendingRidersRow = ({ rider, index, handleViewRider, handleUpdateStatus }) => {
   return (
-    <tr data-aos="fade-right" key={rider._id} className="hover:bg-gray-50">
+    <tr key={rider._id} className="hover:bg-gray-50">
       <td>{index + 1}</td>
 
       {/* Name */}
@@ -49,7 +49,7 @@ const PendingRidersRow = ({ rider, index, handleViewRider, handleUpdateStatus })
 
         {/* Accept Button */}
         <button
-          onClick={() => handleUpdateStatus(rider._id, 'approved')}
+          onClick={() => handleUpdateStatus(rider._id, 'approved', rider.email)}
           className="btn btn-sm shadow-none border-0 bg-green-500 text-white hover:bg-green-600"
           title="Accept Rider"
         >
@@ -58,7 +58,7 @@ const PendingRidersRow = ({ rider, index, handleViewRider, handleUpdateStatus })
 
         {/* Reject Button */}
         <button
-          onClick={() => handleUpdateStatus(rider._id, 'rejected')}
+          onClick={() => handleUpdateStatus(rider._id, 'rejected', rider.email)}
           className="btn btn-sm shadow-none border-0 bg-red-500 text-white hover:bg-red-600"
           title="Reject Rider"
         >

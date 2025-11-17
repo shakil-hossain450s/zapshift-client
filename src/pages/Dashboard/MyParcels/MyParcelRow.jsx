@@ -1,6 +1,4 @@
-import React from 'react';
-import { FaBox, FaClock, FaEye, FaMoneyBillWave, FaTrash, FaCreditCard } from 'react-icons/fa';
-import { Link } from 'react-router';
+import { FaClock, FaEye, FaMoneyBillWave, FaTrash, FaCreditCard } from 'react-icons/fa';
 
 const MyParcelRow = ({ parcel, index, handleView, handleDelete, handlePay }) => {
   const {
@@ -16,7 +14,7 @@ const MyParcelRow = ({ parcel, index, handleView, handleDelete, handlePay }) => 
   } = parcel;
 
   return (
-    <tr data-aos="fade-right" className="hover:bg-gray-50">
+    <tr className="hover:bg-gray-50">
       <td>{index + 1}</td>
       <td className="font-mono text-green-700 font-medium">{trackingId}</td>
       <td className='flex gap-1'>
@@ -58,7 +56,7 @@ const MyParcelRow = ({ parcel, index, handleView, handleDelete, handlePay }) => 
       </td>
 
       {/* 🔹 Action Buttons */}
-      <td className="flex items-center justify-center gap-3 !cursor-default">
+      <td className="flex items-center justify-center gap-3 cursor-default!">
 
         <button
           onClick={() => handlePay(parcel)}

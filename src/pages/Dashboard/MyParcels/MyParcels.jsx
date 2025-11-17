@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import useAxiosSecure from '../../../hooks/useAxiosSecure';
 import useAuth from '../../../hooks/useAuth';
 import { FaBox } from 'react-icons/fa';
-import MyParcelRow from '../../../components/MyParcel/MyParcelRow';
+import MyParcelRow from './MyParcelRow';
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import { useNavigate } from 'react-router';
@@ -503,7 +503,7 @@ const MyParcels = () => {
   return (
     <div data-aos='fade-right'>
       <h2 className="text-2xl font-semibold mb-4 flex items-center gap-2">
-        <FaBox className="text-green-600" /> My Parcels
+        <FaBox className="text-green-600" />My Parcels
       </h2>
 
       {parcels.length === 0 ? (

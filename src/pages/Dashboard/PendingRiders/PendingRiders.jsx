@@ -18,7 +18,7 @@ const PendingRiders = () => {
   })
 
   // handle details view
-  const handleView = (rider) => {
+  const handleViewRider = (rider) => {
     Swal.fire({
       width: 700,
       background: "#ffffff",
@@ -27,28 +27,7 @@ const PendingRiders = () => {
       confirmButtonText: "Close Details",
       confirmButtonColor: "#4f46e5",
       title: `
-      <div class="flex flex-col items-center" style="margin-bottom: 0.5rem; margin-top: -20rem">
-        <div style="
-          width: 70px;
-          border-radius: 50%;
-          background: linear-gradient(to bottom right, #fef3c7, #f59e0b);
-          display:flex;
-          align-items:center;
-          justify-content:center;
-          box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-          border: 3px solid #f59e0b;
-        ">
-          <i class="fa fa-clock text-amber-600" style="font-size:28px;"></i>
-        </div>
-
-        <h2 style="
-          font-size:20px;
-          font-weight:700;
-          color:#1f2937;
-        ">
-          Pending Rider Details
-        </h2>
-      </div>
+        <h2 class="text-4xl -mb-10 -mt-16 text-center font-bold text-gray-900">Pending Rider Details</h2>
     `,
       html: `
       <div style="padding: 0; margin-top: -10px;">
@@ -191,7 +170,7 @@ const PendingRiders = () => {
   };
 
   // handle status update
-  const handleUpdateStatus = (riderId, action) => {
+  const handleUpdateStatus = (riderId, action, email) => {
     const isApprove = action === 'approved';
 
     Swal.fire({
@@ -208,7 +187,8 @@ const PendingRiders = () => {
       if (result.isConfirmed) {
         try {
           const { data } = await axiosSecure.patch(`/rider/${riderId}/status`, {
-            status: isApprove ? 'approved' : 'rejected'
+            status: isApprove ? 'approved' : 'rejected',
+            email
           });
 
           console.log(data);
@@ -265,7 +245,7 @@ const PendingRiders = () => {
             <tbody>
               {
                 pendingRiders.map((rider, index) => (
-                  <PendingRidersRow key={rider._id} rider={rider} index={index} handleView={handleView} handleUpdateStatus={handleUpdateStatus} />
+                  <PendingRidersRow key={rider._id} rider={rider} index={index} handleViewRider={handleViewRider} handleUpdateStatus={handleUpdateStatus} />
                 ))
               }
             </tbody>

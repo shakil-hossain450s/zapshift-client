@@ -3,6 +3,7 @@ import React from 'react';
 import useAxiosSecure from '../../../hooks/useAxiosSecure';
 import useAuth from '../../../hooks/useAuth';
 import PaymentHistoryRow from './PaymentHistoryRow';
+import { FaReceipt } from 'react-icons/fa';
 
 const PaymentHistory = () => {
   const axiosSecure = useAxiosSecure();
@@ -26,10 +27,11 @@ const PaymentHistory = () => {
   if (isPending) return <p>Loading...</p>
   if (isError) return <p className='text-red-500'>Something went wrong...</p>
 
-  console.log(paymentsHistory);
-
   return (
     <div data-aos='fade-right' className="overflow-x-auto">
+      <h2 className="text-2xl font-semibold mb-4 flex items-center gap-2">
+        <FaReceipt className="text-green-600" />Payment History
+      </h2>
       <table className="table w-full rounded-lg shadow-sm">
         {/* Table Head */}
         <thead>
