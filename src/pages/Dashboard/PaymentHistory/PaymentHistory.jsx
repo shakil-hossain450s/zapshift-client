@@ -28,34 +28,43 @@ const PaymentHistory = () => {
   if (isError) return <p className='text-red-500'>Something went wrong...</p>
 
   return (
-    <div data-aos='fade-right' className="overflow-x-auto">
+    <div data-aos='fade-right'>
       <h2 className="text-2xl font-semibold mb-4 flex items-center gap-2">
         <FaReceipt className="text-green-600" />Payment History
       </h2>
-      <table className="table w-full rounded-lg shadow-sm">
-        {/* Table Head */}
-        <thead>
-          <tr className="bg-gray-100 text-gray-700">
-            <th>#</th>
-            <th>Parcel ID</th>
-            <th>Amount</th>
-            <th>Payment Method</th>
-            <th>Transaction Id</th>
-            <th>Status</th>
-            <th>Date</th>
-          </tr>
-        </thead>
 
-        {/* Table Body */}
-        <tbody>
-          {
-            paymentsHistory.map((payment, index) => (
-              <PaymentHistoryRow key={payment._id} payment={payment} index={index} />
-            ))
-          }
-        </tbody>
-      </table>
-    </div>
+      {paymentsHistory.length === 0 ? (
+        <div className="text-center py-10 text-gray-500">
+          No payment history yet.
+        </div>
+      ) : (
+        <div className="overflow-x-auto">
+          <table className="table w-full rounded-lg shadow-sm">
+            {/* Table Head */}
+            <thead>
+              <tr className="bg-gray-100 text-gray-700">
+                <th>#</th>
+                <th>Parcel ID</th>
+                <th>Amount</th>
+                <th>Payment Method</th>
+                <th>Transaction Id</th>
+                <th>Status</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+
+            {/* Table Body */}
+            <tbody>
+              {
+                paymentsHistory.map((payment, index) => (
+                  <PaymentHistoryRow key={payment._id} payment={payment} index={index} />
+                ))
+              }
+            </tbody>
+          </table>
+        </div>
+      )}
+    </div >
   );
 };
 
