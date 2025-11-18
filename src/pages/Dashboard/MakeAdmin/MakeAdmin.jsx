@@ -39,6 +39,7 @@ const MakeAdmin = () => {
         title: "Role Updated Successfully",
         timer: 1500,
         showConfirmButton: false,
+        timerProgressBar: true
       });
     },
     onError: () => {
@@ -95,7 +96,7 @@ const MakeAdmin = () => {
           onChange={(e) => setSearch(e.target.value)}
         />
         <button className="btn bg-[#CAEB66] border-[#CAEB66] text-black">
-          <FaSearch />
+          <FaSearch /> Search
         </button>
       </div>
 
@@ -154,11 +155,10 @@ const MakeAdmin = () => {
 
                   <td>
                     <span
-                      className={`badge ${
-                        user.role === "admin"
+                      className={`badge ${user.role === "admin"
                           ? "badge-success"
                           : "badge-neutral"
-                      }`}
+                        }`}
                     >
                       {user.role}
                     </span>
@@ -175,21 +175,23 @@ const MakeAdmin = () => {
                   </td>
 
                   <td className="flex gap-2 justify-center">
-                    <button
-                      onClick={() => makeAdmin(user)}
-                      disabled={user.role === "admin"}
-                      className="btn btn-xs bg-green-600 text-white"
-                    >
-                      <FaUserShield /> Admin
-                    </button>
+                    {user.role !== "admin" && (
+                      <button
+                        onClick={() => makeAdmin(user)}
+                        className="btn btn-xs bg-green-600 text-white"
+                      >
+                        <FaUserShield /> Make Admin
+                      </button>
+                    )}
 
-                    <button
-                      onClick={() => removeAdmin(user)}
-                      disabled={user.role === "user"}
-                      className="btn btn-xs bg-red-600 text-white"
-                    >
-                      <FaUserTimes /> Remove
-                    </button>
+                    {user.role === "admin" && (
+                      <button
+                        onClick={() => removeAdmin(user)}
+                        className="btn btn-xs bg-red-600 text-white"
+                      >
+                        <FaUserTimes /> Remove Admin
+                      </button>
+                    )}
                   </td>
                 </tr>
               ))}

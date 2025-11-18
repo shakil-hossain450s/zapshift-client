@@ -1,8 +1,10 @@
 import { Link, NavLink, Outlet } from 'react-router';
 import logo from '../assets/images/logo.png'
 import { FaBox, FaMoneyCheckAlt, FaMapMarkerAlt, FaUserEdit, FaUserCheck, FaUserClock, FaUserShield } from 'react-icons/fa';
+import useUserRole from '../hooks/useUserRole';
 
 const DashboardLayout = () => {
+  const { role, isAdmin, loading } = useUserRole();
   const links = <>
     <li className="mb-2">
       <NavLink to='/dashboard/my-parcels'>
@@ -34,25 +36,30 @@ const DashboardLayout = () => {
       </NavLink>
     </li>
 
-    <li className="mb-2">
-      <NavLink to='/dashboard/active-riders'>
-        <FaUserCheck className="text-teal-500" />
-        Active Riders
-      </NavLink>
-    </li>
+    {
+      !loading && role === 'admin' && isAdmin &&
+      <>
+        <li className="mb-2">
+          <NavLink to='/dashboard/active-riders'>
+            <FaUserCheck className="text-teal-500" />
+            Active Riders
+          </NavLink>
+        </li>
 
-    <li className="mb-2">
-      <NavLink to='/dashboard/pending-riders'>
-        <FaUserClock className="text-orange-500" />
-        Pending Riders
-      </NavLink>
-    </li>
-    <li className="mb-2">
-      <NavLink to='/dashboard/make-admin'>
-        <FaUserShield className="text-orange-500" />
-        Make Admin
-      </NavLink>
-    </li>
+        <li className="mb-2">
+          <NavLink to='/dashboard/pending-riders'>
+            <FaUserClock className="text-orange-500" />
+            Pending Riders
+          </NavLink>
+        </li>
+        <li className="mb-2">
+          <NavLink to='/dashboard/make-admin'>
+            <FaUserShield className="text-orange-500" />
+            Make Admin
+          </NavLink>
+        </li>
+      </>
+    }
 
   </>
   return (

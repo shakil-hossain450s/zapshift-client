@@ -158,7 +158,7 @@ const PaymentForm = () => {
         className="btn w-full bg-[#CAEB66] text-gray-900 font-medium hover:bg-[#b7d959] transition-all duration-300 rounded-lg shadow-sm border-0"
         disabled={!stripe}
       >
-        {loading ? 'Processing' : `Pay ৳${parcel.deliveryCost}`}
+        {loading ? 'Processing...' : `Pay ৳${parcel.deliveryCost}`}
       </button>
 
       {errorMessage && <p className='text-red-500'>{errorMessage}</p>}
