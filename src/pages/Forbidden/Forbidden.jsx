@@ -1,5 +1,5 @@
 import React from "react";
-import { FaBan, FaArrowLeft } from "react-icons/fa";
+import { FaBan, FaArrowLeft, FaLock } from "react-icons/fa";
 import { Link } from "react-router";
 
 const Forbidden = () => {
@@ -9,7 +9,7 @@ const Forbidden = () => {
 
         {/* Icon */}
         <div className="flex justify-center mb-4">
-          <FaBan className="text-red-500" size={80} />
+          <FaLock className="text-red-500" size={80} />
         </div>
 
         {/* Title */}
