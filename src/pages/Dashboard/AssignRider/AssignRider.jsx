@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import useAxiosSecure from '../../../hooks/useAxiosSecure';
-import { FaMotorcycle } from 'react-icons/fa';
+import { FaMotorcycle, FaTruckLoading } from 'react-icons/fa';
 import Swal from 'sweetalert2';
-import warehouseData from '../../../assets/data/warehouses.json'; // local JSON
+import warehouseData from '../../../assets/data/warehouses.json';
 
 const AssignRider = () => {
   const axiosSecure = useAxiosSecure();
@@ -14,14 +14,21 @@ const AssignRider = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedRider, setSelectedRider] = useState('');
 
-  // Fetch eligible parcels
+  // Fetch eligible parcels - UPDATED QUERY TO SHOW BOTH STATUSES
   const { data: parcels = [], isLoading, isError } = useQuery({
     queryKey: ['assignableParcels'],
     queryFn: async () => {
       const { data } = await axiosSecure.get(
-        '/admin/parcels?parcelStatus=Processing&paymentStatus=Paid&deliveryStatus=Not%20Dispatched'
+        '/admin/parcels?parcelStatus=Processing&paymentStatus=Paid'
+        // Removed deliveryStatus filter to see both statuses
       );
-      return data.parcels.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt)); // oldest first
+
+      // Filter parcels that are either "Not Dispatched" or "In Transit" but not yet delivered
+      const filteredParcels = data.parcels.filter(parcel =>
+        parcel.deliveryStatus === 'Not Dispatched' || parcel.deliveryStatus === 'In Transit'
+      );
+
+      return filteredParcels.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
     },
   });
 
@@ -35,35 +42,83 @@ const AssignRider = () => {
     setModalOpen(true);
 
     try {
-      // Find warehouse district for the parcel
-      const warehouse = warehouseData.find(w => w.name === parcel.receiver.warehouse);
-      const district = warehouse?.district || parcel.receiver.district;
+      const warehouse = warehouseData.find(w => w.name === parcel.receiver?.warehouse);
+      const district = warehouse?.district || parcel.receiver?.district;
 
-      const { data } = await axiosSecure.get(`/riders?district=${district}`);
-      if (data.success) setRiders(data.riders);
+      console.log('Parcel district:', district);
+      console.log('Parcel receiver:', parcel.receiver);
+
+      if (!district) {
+        Swal.fire('Error', 'No district found for this parcel', 'error');
+        return;
+      }
+
+      const { data } = await axiosSecure.get(`/riders?district=${encodeURIComponent(district)}`);
+      console.log('Riders API response:', data);
+
+      if (data.success) {
+        console.log('Available riders:', data.riders);
+        setRiders(data.riders);
+
+        if (data.riders.length === 0) {
+          Swal.fire('Info', `No available riders found in ${district} district`, 'info');
+        }
+      } else {
+        console.error('API error:', data.message);
+        Swal.fire('Error', data.message || 'Failed to load riders', 'error');
+      }
     } catch (err) {
-      console.error(err);
-      Swal.fire('Error', 'Failed to load riders', 'error');
+      console.error('Error loading riders:', err);
+      Swal.fire('Error', err.response?.data?.message || 'Failed to load riders', 'error');
     }
   };
 
-  // Assign rider
+  // asign rider
   const handleAssignRider = async () => {
     if (!selectedRider) return Swal.fire('Select Rider', 'Please select a rider first', 'info');
 
+    const selectedRiderData = riders.find(r => r._id === selectedRider);
+
     const result = await Swal.fire({
-      title: 'Are you sure?',
-      text: `Assign this rider to parcel ${selectedParcel.trackingId}?`,
+      title: 'Assign Rider?',
+      html: `
+      <div class="text-left">
+        <p>Assign <strong>${selectedRiderData?.name}</strong> to parcel <strong>${selectedParcel.trackingId}</strong>?</p>
+        <p class="text-sm text-gray-600 mt-2">This will update:</p>
+        <ul class="text-sm text-gray-600 ml-4">
+          <li>• Parcel Status: Processing → On the Way</li>
+          <li>• Delivery Status: Not Dispatched → In Transit</li>
+        </ul>
+      </div>
+    `,
       icon: 'question',
       showCancelButton: true,
-      confirmButtonText: 'Yes, assign',
+      confirmButtonColor: '#10b981',
+      cancelButtonColor: '#6b7280',
+      confirmButtonText: 'Yes, Assign Rider!'
     });
 
     if (result.isConfirmed) {
       try {
-        const { data } = await axiosSecure.put(`/assign-rider/${selectedParcel._id}`, { riderId: selectedRider });
+        const { data } = await axiosSecure.put(`/assign-rider/${selectedParcel._id}`, {
+          riderId: selectedRider
+        });
+
         if (data.success) {
-          Swal.fire('Assigned!', 'Rider assigned successfully', 'success');
+          console.log('Assignment successful, parcel data:', data.parcel);
+          Swal.fire({
+            title: 'Assigned Successfully!',
+            html: `
+            <div class="text-left">
+              <p>Rider <strong>${selectedRiderData?.name}</strong> assigned to parcel <strong>${selectedParcel.trackingId}</strong></p>
+              <div class="mt-3 space-y-1">
+                <p class="text-sm text-green-600">✓ Parcel Status: <strong>${data.parcel.parcelStatus}</strong></p>
+                <p class="text-sm text-green-600">✓ Delivery Status: <strong>${data.parcel.deliveryStatus}</strong></p>
+              </div>
+            </div>
+          `,
+            icon: 'success',
+          });
           setModalOpen(false);
           queryClient.invalidateQueries(['assignableParcels']);
         } else {
@@ -71,12 +126,15 @@ const AssignRider = () => {
         }
       } catch (err) {
         console.error(err);
-        Swal.fire('Error', 'Failed to assign rider', 'error');
+        Swal.fire('Error', err.response?.data?.message || 'Failed to assign rider', 'error');
       }
     }
   };
 
-  console.log(parcels);
+  // Check if rider is available (not currently assigned to ANOTHER delivery)
+  const isRiderAvailable = (rider) => {
+    return !rider.currentDelivery || rider.currentDelivery === selectedParcel?._id;
+  };
 
   return (
     <div data-aos='fade-right'>
@@ -101,28 +159,82 @@ const AssignRider = () => {
                 <th>Delivery Cost</th>
                 <th>Payment</th>
                 <th>Status</th>
+                <th>Delivery Status</th>
+                <th>Assigned Rider</th>
                 <th>Created</th>
                 <th className="text-center">Actions</th>
               </tr>
             </thead>
             <tbody>
               {parcels.map((parcel, index) => (
-                <tr key={parcel._id} className="hover:bg-gray-50">
+                <tr
+                  key={parcel._id}
+                  className={`hover:bg-gray-50 ${parcel.deliveryStatus === 'In Transit' ? 'bg-yellow-50' : ''
+                    }`}
+                >
                   <td>{index + 1}</td>
-                  <td>{parcel.trackingId}</td>
+                  <td className="font-mono font-semibold">{parcel.trackingId}</td>
                   <td>{parcel.parcelName}</td>
-                  <td>{parcel.receiver.region}</td>
-                  <td>{parcel.receiver.district}</td>
+                  <td>{parcel.receiver?.region || 'N/A'}</td>
+                  <td>{parcel.receiver?.district || 'N/A'}</td>
                   <td>৳{parcel.deliveryCost}</td>
-                  <td>{parcel.paymentStatus}</td>
-                  <td>{parcel.parcelStatus}</td>
-                  <td>{new Date(parcel.createdAt).toLocaleDateString("en-BD", { timeZone: "Asia/Dhaka" })}</td>
+                  <td>
+                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${parcel.paymentStatus === 'Paid'
+                      ? 'bg-green-100 text-green-800'
+                      : 'bg-red-100 text-red-800'
+                      }`}>
+                      {parcel.paymentStatus}
+                    </span>
+                  </td>
+                  <td>
+                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${parcel.parcelStatus === 'Processing'
+                      ? 'bg-blue-100 text-blue-800'
+                      : 'bg-gray-100 text-gray-800'
+                      }`}>
+                      {parcel.parcelStatus}
+                    </span>
+                  </td>
+                  <td>
+                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${parcel.deliveryStatus === 'In Transit'
+                      ? 'bg-yellow-100 text-yellow-800'
+                      : parcel.deliveryStatus === 'Delivered'
+                        ? 'bg-green-100 text-green-800'
+                        : 'bg-gray-100 text-gray-800'
+                      }`}>
+                      {parcel.deliveryStatus}
+                    </span>
+                  </td>
+                  <td>
+                    {parcel.assignedRider ? (
+                      <div className="flex items-center gap-2">
+                        <FaTruckLoading className="text-green-600" />
+                        <span>
+                          {parcel.assignedRider.name} ({parcel.assignedRider.bikeRegNo || 'N/A'})
+                        </span>
+                      </div>
+                    ) : (
+                      <span className="text-gray-500">Not assigned</span>
+                    )}
+                  </td>
+                  <td>{new Date(parcel.createdAt).toLocaleDateString('en-BD', { timeZone: 'Asia/Dhaka' })}</td>
                   <td className="text-center">
                     <button
-                      className="btn btn-sm btn-primary"
+                      className={`btn btn-sm ${parcel.deliveryStatus === 'In Transit' || parcel.assignedRider
+                        ? 'btn-disabled bg-gray-400 cursor-not-allowed'
+                        : 'btn-primary'
+                        }`}
                       onClick={() => handleAssignClick(parcel)}
+                      disabled={parcel.deliveryStatus === 'In Transit' || parcel.assignedRider}
+                      title={
+                        parcel.deliveryStatus === 'In Transit'
+                          ? 'Parcel already in delivery'
+                          : parcel.assignedRider
+                            ? 'Rider already assigned'
+                            : 'Assign rider'
+                      }
                     >
-                      Assign Rider
+                      {parcel.deliveryStatus === 'In Transit' ? 'In Transit' :
+                        parcel.assignedRider ? 'Assigned' : 'Assign Rider'}
                     </button>
                   </td>
                 </tr>
@@ -136,34 +248,67 @@ const AssignRider = () => {
       {modalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 w-96">
-            <h3 className="text-xl font-semibold mb-4">Select Rider for {selectedParcel.trackingId}</h3>
+            <h3 className="text-xl font-semibold mb-4">Select Rider for {selectedParcel?.trackingId}</h3>
+
             {riders.length === 0 ? (
-              <p>No riders available for this district</p>
+              <p className="text-gray-500 text-center py-4">No riders available for this district</p>
             ) : (
-              <select
-                className="w-full border rounded p-2 mb-4"
-                value={selectedRider}
-                onChange={e => setSelectedRider(e.target.value)}
-              >
-                <option value="">-- Select Rider --</option>
-                {riders.map(r => (
-                  <option key={r._id} value={r._id}>{r.name} ({r.bikeRegNo})</option>
-                ))}
-              </select>
+              <>
+                <select
+                  className="w-full border border-gray-300 rounded-lg p-3 mb-4 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  value={selectedRider}
+                  onChange={(e) => setSelectedRider(e.target.value)}
+                >
+                  <option value="">-- Select Rider --</option>
+                  {riders.map((rider) => (
+                    <option
+                      key={rider._id}
+                      value={rider._id}
+                      disabled={!isRiderAvailable(rider)}
+                      className={!isRiderAvailable(rider) ? 'text-gray-400' : ''}
+                    >
+                      {rider.name} ({rider.bikeRegNo})
+                      {!isRiderAvailable(rider) && ' - Currently on another delivery'}
+                    </option>
+                  ))}
+                </select>
+
+                <div className="mb-4">
+                  <p className="text-sm text-gray-600">
+                    Available Riders: {riders.filter(rider => isRiderAvailable(rider)).length} / {riders.length}
+                  </p>
+                </div>
+
+                {selectedRider && (
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-4">
+                    <h4 className="font-semibold text-blue-800 mb-2">Selected Rider:</h4>
+                    <p className="text-sm text-blue-700">
+                      {riders.find(r => r._id === selectedRider)?.name} -
+                      {riders.find(r => r._id === selectedRider)?.bikeRegNo}
+                    </p>
+                    {!isRiderAvailable(riders.find(r => r._id === selectedRider)) && (
+                      <p className="text-sm text-red-600 mt-1">
+                        ⚠️ This rider is currently assigned to another delivery
+                      </p>
+                    )}
+                  </div>
+                )}
+              </>
             )}
 
             <div className="flex justify-end gap-2">
               <button
-                className="btn btn-secondary"
+                className="btn btn-secondary px-4 py-2"
                 onClick={() => setModalOpen(false)}
               >
                 Cancel
               </button>
               <button
-                className="btn btn-primary"
+                className="btn btn-primary px-4 py-2"
                 onClick={handleAssignRider}
+                disabled={!selectedRider || !isRiderAvailable(riders.find(r => r._id === selectedRider))}
               >
-                Assign
+                Assign Rider
               </button>
             </div>
           </div>

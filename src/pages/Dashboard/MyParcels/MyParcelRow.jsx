@@ -10,6 +10,7 @@ const MyParcelRow = ({ parcel, index, handleView, handleDelete, handlePay }) => 
     paymentMethod,
     paymentStatus,
     parcelStatus,
+    deliveryStatus,
     createdAtReadable
   } = parcel;
 
@@ -30,8 +31,8 @@ const MyParcelRow = ({ parcel, index, handleView, handleDelete, handlePay }) => 
           {paymentMethod}
           <span
             className={`ml-1 text-xs px-2 py-0.5 rounded-full ${paymentStatus === "Paid"
-                ? "bg-green-100 text-green-700"
-                : "bg-yellow-100 text-yellow-700"
+              ? "bg-green-100 text-green-700"
+              : "bg-yellow-100 text-yellow-700"
               }`}
           >
             {paymentStatus}
@@ -39,15 +40,25 @@ const MyParcelRow = ({ parcel, index, handleView, handleDelete, handlePay }) => 
         </span>
       </td>
       <td>
-        <span
-          className={`text-xs font-medium px-2 py-1 rounded-full ${parcelStatus === "Delivered"
-              ? "bg-green-100 text-green-700"
-              : parcelStatus === "Processing"
-                ? "bg-blue-100 text-blue-700"
-                : "bg-gray-100 text-gray-700"
-            }`}
-        >
+        <span className={`px-2 py-1 rounded-full text-xs font-medium ${parcelStatus === 'Processing'
+            ? 'bg-blue-100 text-blue-800'
+            : parcelStatus === 'On the Way'
+              ? 'bg-yellow-100 text-yellow-800'
+              : 'bg-gray-100 text-gray-800'
+          }`}>
           {parcelStatus}
+        </span>
+      </td>
+      <td>
+        <span className={`px-2 py-1 rounded-full text-xs font-medium ${deliveryStatus === 'In Transit'
+            ? 'bg-yellow-100 text-yellow-800'
+            : deliveryStatus === 'Delivered'
+              ? 'bg-green-100 text-green-800'
+              : deliveryStatus === 'Not Dispatched'
+                ? 'bg-gray-100 text-gray-800'
+                : 'bg-gray-100 text-gray-800'
+          }`}>
+          {deliveryStatus}
         </span>
       </td>
       <td className="text-sm text-gray-600">

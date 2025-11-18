@@ -433,7 +433,8 @@ const MyParcels = () => {
                 <th>Parcel Name</th>
                 <th>Delivery Cost</th>
                 <th>Payment</th>
-                <th>Status</th>
+                <th>Parcel Status</th>
+                <th>Delivery Status</th>
                 <th>Created</th>
                 <th className="text-center">Actions</th>
               </tr>
