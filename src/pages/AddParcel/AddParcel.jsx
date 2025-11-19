@@ -7,11 +7,13 @@ import PrimaryButton from "../../components/PrimaryButton";
 import warehouseData from "../../assets/data/warehouses.json";
 import useAuth from "../../hooks/useAuth";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
+import { useNavigate } from "react-router";
 
 const AddParcel = () => {
   const { user } = useAuth();
   const userEmail = user?.email || "guest@unknown.com";
   const axiosSecure = useAxiosSecure();
+  const navigate = useNavigate();
 
   const {
     register,
@@ -199,6 +201,7 @@ const AddParcel = () => {
                 </div>
               </div>
             ));
+            navigate('/dashboard/my-parcels');
           }
         } catch (err) {
           console.log(err);
@@ -279,7 +282,7 @@ const AddParcel = () => {
           <div>
             <h3 className="font-semibold text-lg mb-4">Sender Details</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <input {...register("senderName", { required: true })} placeholder="Sender Name" className="input input-bordered w-full" />
+              <input {...register("senderName", { required: true })} placeholder="Sender Name" className="input input-bordered w-full" value={user?.displayName} />
               <input {...register("senderContact", { required: true })} placeholder="Sender Contact No" className="input input-bordered w-full" />
 
               <select

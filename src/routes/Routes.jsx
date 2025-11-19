@@ -20,6 +20,8 @@ import MakeAdmin from "../pages/Dashboard/MakeAdmin/MakeAdmin";
 import AdminRoute from "./AdminRoute";
 import Forbidden from "../pages/Forbidden/Forbidden";
 import AssignRider from "../pages/Dashboard/AssignRider/AssignRider";
+import PendingDeliveries from "../pages/Dashboard/Riders/PendingDeliveries/PendingDeliveries";
+import RiderRoute from "./RiderRoute";
 
 const router = createBrowserRouter([
   {
@@ -64,7 +66,7 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <Navigate to='/dashboard/my-parcels' replace />
+        element: <Navigate to='/dashboard/my-parcels' />
       },
       {
         path: "my-parcels",
@@ -78,6 +80,7 @@ const router = createBrowserRouter([
         path: 'payment-history',
         Component: PaymentHistory
       },
+      // admin routes
       {
         path: 'pending-riders',
         element: <AdminRoute>
@@ -101,6 +104,13 @@ const router = createBrowserRouter([
         element: <AdminRoute>
           <AssignRider />
         </AdminRoute>
+      },
+      // riders routes
+      {
+        path: 'pending-deliveries',
+        element: <RiderRoute>
+          <PendingDeliveries />
+        </RiderRoute>
       }
     ]
   }

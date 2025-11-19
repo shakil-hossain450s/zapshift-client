@@ -1,6 +1,6 @@
 import { Link, NavLink, Outlet } from 'react-router';
 import logo from '../assets/images/logo.png'
-import { FaBox, FaMoneyCheckAlt, FaMapMarkerAlt, FaUserEdit, FaUserCheck, FaUserClock, FaUserShield, FaMotorcycle } from 'react-icons/fa';
+import { FaBox, FaMoneyCheckAlt, FaMapMarkerAlt, FaUserEdit, FaUserCheck, FaUserClock, FaUserShield, FaMotorcycle, FaTasks } from 'react-icons/fa';
 import useUserRole from '../hooks/useUserRole';
 
 const DashboardLayout = () => {
@@ -36,6 +36,20 @@ const DashboardLayout = () => {
       </NavLink>
     </li>
 
+    {/* rider roles */}
+    {
+      !loading && role === 'rider' &&
+      <>
+        <li className="mb-2">
+          <NavLink to='/dashboard/pending-deliveries'>
+            <FaTasks className="text-teal-500" />
+            Pending Deliveries
+          </NavLink>
+        </li>
+      </>
+    }
+
+    {/* admin links */}
     {
       !loading && role === 'admin' && isAdmin &&
       <>
