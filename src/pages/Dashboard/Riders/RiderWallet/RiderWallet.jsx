@@ -10,13 +10,14 @@ import {
   FaMobileAlt,
   FaCheckCircle,
   FaClock,
-  FaExclamationTriangle
+  FaExclamationTriangle,
+  FaSpinner
 } from 'react-icons/fa';
 import Swal from 'sweetalert2';
 import useAxiosSecure from '../../../../hooks/useAxiosSecure';
 import useAuth from '../../../../hooks/useAuth';
 
-// Custom icons for payment methods (using existing icons)
+// Custom icons for payment methods
 const PaymentMethodIcons = {
   bkash: <FaMobileAlt className="text-green-500" />,
   nagad: <FaMobileAlt className="text-purple-500" />,
@@ -30,17 +31,18 @@ const RiderWallet = () => {
   const [activeTab, setActiveTab] = useState('overview');
   const [cashOutAmount, setCashOutAmount] = useState('');
   const [selectedMethod, setSelectedMethod] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
 
   // Fetch wallet data
-  const { data: walletData, isLoading, error } = useQuery({
-    queryKey: ['riderWallet', user?.email],
+  const { data: walletData, isLoading, error, refetch } = useQuery({
+    queryKey: ['riderWallet', user?.uid],
     queryFn: async () => {
-      if (!user?.email) throw new Error('User not authenticated');
+      if (!user?.uid) throw new Error('User not authenticated');
       
       const { data } = await axiosSecure.get('/wallet/balance');
       return data;
     },
-    enabled: !!user?.email,
+    enabled: !!user?.uid,
   });
 
   // Cash-out mutation
@@ -49,20 +51,25 @@ const RiderWallet = () => {
       const { data } = await axiosSecure.post('/wallet/cash-out', cashOutData);
       return data;
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
       Swal.fire({
-        title: 'Cash-Out Request Submitted!',
-        text: 'Your withdrawal request has been received and will be processed within 24-48 hours.',
+        title: '✅ Cash-Out Request Submitted!',
+        text: `Your withdrawal request of ৳${data.data.amount} has been received and will be processed within 24-48 hours.`,
         icon: 'success',
         confirmButtonColor: '#10b981',
       });
+      
+      // Reset form
       setCashOutAmount('');
       setSelectedMethod('');
+      setPhoneNumber('');
+      
+      // Refresh wallet data
       queryClient.invalidateQueries(['riderWallet']);
     },
     onError: (error) => {
       Swal.fire({
-        title: 'Cash-Out Failed',
+        title: '❌ Cash-Out Failed',
         text: error.response?.data?.message || 'Failed to process cash-out request',
         icon: 'error',
         confirmButtonColor: '#ef4444',
@@ -82,6 +89,7 @@ const RiderWallet = () => {
     const minAmount = 500;
     const maxAmount = 50000;
 
+    // Validation
     if (amount < minAmount) {
       Swal.fire('Error', `Minimum cash-out amount is ৳${minAmount}`, 'error');
       return;
@@ -92,21 +100,35 @@ const RiderWallet = () => {
       return;
     }
 
-    if (amount > walletData.availableBalance) {
+    if (amount > walletData.data.availableBalance) {
       Swal.fire('Error', 'Insufficient balance', 'error');
+      return;
+    }
+
+    // For mobile payments, require phone number
+    if ((selectedMethod === 'bkash' || selectedMethod === 'nagad') && !phoneNumber) {
+      Swal.fire('Error', 'Please enter your phone number', 'error');
       return;
     }
 
     const result = await Swal.fire({
       title: 'Confirm Cash-Out',
       html: `
-        <div class="text-left">
-          <p>You are requesting to cash out <strong>৳${amount}</strong> via <strong>${getMethodName(selectedMethod)}</strong>.</p>
-          <div class="mt-3 p-3 bg-yellow-50 rounded-lg">
-            <p class="text-sm text-yellow-700">
-              <strong>Processing Time:</strong> 24-48 hours<br>
-              <strong>Processing Fee:</strong> ৳10
-            </p>
+        <div class="text-left space-y-3">
+          <p>You are requesting to cash out:</p>
+          <div class="text-center">
+            <p class="text-2xl font-bold text-green-600">৳${amount}</p>
+            <p class="text-sm text-gray-600">via ${getMethodName(selectedMethod)}</p>
+          </div>
+          
+          <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-3">
+            <p class="text-sm font-medium text-yellow-800">Processing Information</p>
+            <div class="text-xs text-yellow-700 mt-1 space-y-1">
+              <p>• Processing time: 24-48 hours</p>
+              <p>• Processing fee: ৳10</p>
+              <p>• You will receive: ৳${amount - 10}</p>
+              ${phoneNumber ? `<p>• To: ${phoneNumber}</p>` : ''}
+            </div>
           </div>
         </div>
       `,
@@ -118,10 +140,14 @@ const RiderWallet = () => {
     });
 
     if (result.isConfirmed) {
+      const accountInfo = selectedMethod === 'bank' 
+        ? { accountNumber: phoneNumber }
+        : { phoneNumber };
+
       cashOutMutation.mutate({
         amount: amount,
         method: selectedMethod,
-        accountInfo: getAccountInfo(selectedMethod)
+        accountInfo: accountInfo
       });
     }
   };
@@ -137,14 +163,6 @@ const RiderWallet = () => {
 
   const getMethodIcon = (method) => {
     return PaymentMethodIcons[method] || <FaMoneyBillWave />;
-  };
-
-  const getAccountInfo = (method) => {
-    // In a real app, you'd get this from user's saved payment methods
-    return {
-      phoneNumber: user?.phone || '',
-      accountType: 'Personal'
-    };
   };
 
   const getStatusIcon = (status) => {
@@ -187,7 +205,7 @@ const RiderWallet = () => {
           <p>Failed to load wallet data.</p>
         </div>
         <button 
-          onClick={() => queryClient.invalidateQueries(['riderWallet'])}
+          onClick={() => refetch()}
           className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
         >
           Try Again
@@ -196,13 +214,15 @@ const RiderWallet = () => {
     );
   }
 
-  if (!user?.email) {
+  if (!user?.uid) {
     return (
       <div className="text-center py-10 text-gray-500">
         <p>Please log in to view your wallet.</p>
       </div>
     );
   }
+
+  const { availableBalance, totalEarned, totalWithdrawn, pendingWithdrawals, transactionHistory } = walletData.data;
 
   return (
     <div className="min-h-screen bg-gray-50 p-4">
@@ -224,7 +244,7 @@ const RiderWallet = () => {
               <div>
                 <p className="text-sm font-medium text-gray-600">Available Balance</p>
                 <p className="text-3xl font-bold text-green-600 mt-2">
-                  ৳{walletData?.availableBalance?.toFixed(2) || '0.00'}
+                  ৳{availableBalance?.toFixed(2) || '0.00'}
                 </p>
                 <p className="text-xs text-gray-500 mt-1">Ready for withdrawal</p>
               </div>
@@ -240,7 +260,7 @@ const RiderWallet = () => {
               <div>
                 <p className="text-sm font-medium text-gray-600">Total Earned</p>
                 <p className="text-3xl font-bold text-blue-600 mt-2">
-                  ৳{walletData?.totalEarned?.toFixed(2) || '0.00'}
+                  ৳{totalEarned?.toFixed(2) || '0.00'}
                 </p>
                 <p className="text-xs text-gray-500 mt-1">All-time earnings</p>
               </div>
@@ -256,7 +276,7 @@ const RiderWallet = () => {
               <div>
                 <p className="text-sm font-medium text-gray-600">Total Withdrawn</p>
                 <p className="text-3xl font-bold text-purple-600 mt-2">
-                  ৳{walletData?.totalWithdrawn?.toFixed(2) || '0.00'}
+                  ৳{totalWithdrawn?.toFixed(2) || '0.00'}
                 </p>
                 <p className="text-xs text-gray-500 mt-1">All-time withdrawals</p>
               </div>
@@ -300,6 +320,11 @@ const RiderWallet = () => {
                 }`}
               >
                 Pending Withdrawals
+                {pendingWithdrawals?.length > 0 && (
+                  <span className="ml-2 bg-blue-100 text-blue-800 text-xs px-2 py-0.5 rounded-full">
+                    {pendingWithdrawals.length}
+                  </span>
+                )}
               </button>
             </nav>
           </div>
@@ -310,7 +335,6 @@ const RiderWallet = () => {
               <div className="max-w-2xl">
                 <h3 className="text-lg font-semibold text-gray-900 mb-4">Cash Out Funds</h3>
                 
-                {/* Cash Out Form */}
                 <form onSubmit={handleCashOut} className="space-y-6">
                   {/* Amount Input */}
                   <div>
@@ -366,13 +390,37 @@ const RiderWallet = () => {
                     </div>
                   </div>
 
+                  {/* Phone Number / Account Number */}
+                  {(selectedMethod === 'bkash' || selectedMethod === 'nagad' || selectedMethod === 'bank') && (
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        {selectedMethod === 'bank' ? 'Account Number' : 'Phone Number'}
+                      </label>
+                      <input
+                        type="text"
+                        value={phoneNumber}
+                        onChange={(e) => setPhoneNumber(e.target.value)}
+                        placeholder={selectedMethod === 'bank' ? 'Enter account number' : '01XXXXXXXXX'}
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        required
+                      />
+                    </div>
+                  )}
+
                   {/* Cash Out Button */}
                   <button
                     type="submit"
                     disabled={cashOutMutation.isLoading || !cashOutAmount || !selectedMethod}
-                    className="w-full bg-green-600 text-white py-3 px-4 rounded-lg font-semibold hover:bg-green-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
+                    className="w-full bg-green-600 text-white py-3 px-4 rounded-lg font-semibold hover:bg-green-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
                   >
-                    {cashOutMutation.isLoading ? 'Processing...' : 'Request Cash Out'}
+                    {cashOutMutation.isLoading ? (
+                      <>
+                        <FaSpinner className="animate-spin" />
+                        Processing...
+                      </>
+                    ) : (
+                      'Request Cash Out'
+                    )}
                   </button>
 
                   {/* Processing Info */}
@@ -397,9 +445,9 @@ const RiderWallet = () => {
             {activeTab === 'transactions' && (
               <div>
                 <h3 className="text-lg font-semibold text-gray-900 mb-4">Transaction History</h3>
-                {walletData?.transactionHistory?.length > 0 ? (
+                {transactionHistory?.length > 0 ? (
                   <div className="space-y-3">
-                    {walletData.transactionHistory.slice(0, 10).map((transaction, index) => (
+                    {transactionHistory.map((transaction, index) => (
                       <div key={index} className="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
                         <div className="flex items-center gap-4">
                           <div className={`p-2 rounded-full ${
@@ -440,9 +488,9 @@ const RiderWallet = () => {
             {activeTab === 'pending' && (
               <div>
                 <h3 className="text-lg font-semibold text-gray-900 mb-4">Pending Withdrawals</h3>
-                {walletData?.pendingWithdrawals?.length > 0 ? (
+                {pendingWithdrawals?.length > 0 ? (
                   <div className="space-y-3">
-                    {walletData.pendingWithdrawals.map((withdrawal, index) => (
+                    {pendingWithdrawals.map((withdrawal, index) => (
                       <div key={index} className="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
                         <div className="flex items-center gap-4">
                           {getStatusIcon(withdrawal.status)}
@@ -452,6 +500,8 @@ const RiderWallet = () => {
                             </p>
                             <p className="text-sm text-gray-500">
                               Requested: {formatDate(withdrawal.requestedAt)}
+                              {withdrawal.accountInfo?.phoneNumber && ` • ${withdrawal.accountInfo.phoneNumber}`}
+                              {withdrawal.accountInfo?.accountNumber && ` • ${withdrawal.accountInfo.accountNumber}`}
                             </p>
                           </div>
                         </div>
