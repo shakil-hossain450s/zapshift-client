@@ -22,6 +22,9 @@ import Forbidden from "../pages/Forbidden/Forbidden";
 import AssignRider from "../pages/Dashboard/AssignRider/AssignRider";
 import PendingDeliveries from "../pages/Dashboard/Riders/PendingDeliveries/PendingDeliveries";
 import RiderRoute from "./RiderRoute";
+import CompletedDeliveries from "../pages/Dashboard/Riders/CompletedDeliveries/CompletedDeliveries";
+import RiderWallet from "../pages/Dashboard/Riders/RiderWallet/RiderWallet";
+
 
 const router = createBrowserRouter([
   {
@@ -110,6 +113,18 @@ const router = createBrowserRouter([
         path: 'pending-deliveries',
         element: <RiderRoute>
           <PendingDeliveries />
+        </RiderRoute>
+      },
+      {
+        path: 'completed-deliveries',
+        element: <RiderRoute>
+          <CompletedDeliveries />
+        </RiderRoute>
+      },
+      {
+        path: 'rider-wallet',
+        element: <RiderRoute>
+          <RiderWallet />
         </RiderRoute>
       }
     ]

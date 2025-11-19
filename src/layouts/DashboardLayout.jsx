@@ -1,6 +1,6 @@
 import { Link, NavLink, Outlet } from 'react-router';
 import logo from '../assets/images/logo.png'
-import { FaBox, FaMoneyCheckAlt, FaMapMarkerAlt, FaUserEdit, FaUserCheck, FaUserClock, FaUserShield, FaMotorcycle, FaTasks } from 'react-icons/fa';
+import { FaBox, FaMoneyCheckAlt, FaMapMarkerAlt, FaUserEdit, FaUserCheck, FaUserClock, FaUserShield, FaMotorcycle, FaTasks, FaCheckCircle, FaWallet } from 'react-icons/fa';
 import useUserRole from '../hooks/useUserRole';
 
 const DashboardLayout = () => {
@@ -44,6 +44,18 @@ const DashboardLayout = () => {
           <NavLink to='/dashboard/pending-deliveries'>
             <FaTasks className="text-teal-500" />
             Pending Deliveries
+          </NavLink>
+        </li>
+        <li className="mb-2">
+          <NavLink to='/dashboard/completed-deliveries'>
+            <FaCheckCircle className="text-teal-500" />
+            Completed Deliveries
+          </NavLink>
+        </li>
+        <li className="mb-2">
+          <NavLink to='/dashboard/rider-wallet'>
+            <FaWallet className="text-teal-500" />
+            Rider Wallet
           </NavLink>
         </li>
       </>

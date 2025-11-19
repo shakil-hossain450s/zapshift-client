@@ -1,6 +1,5 @@
-import React from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { FaBox, FaMapMarkerAlt, FaClock, FaDollarSign, FaMotorcycle, FaCheck, FaShippingFast } from 'react-icons/fa';
+import { FaBox, FaMapMarkerAlt, FaClock, FaDollarSign, FaMotorcycle, FaShippingFast } from 'react-icons/fa';
 import Swal from 'sweetalert2';
 import useAxiosSecure from '../../../../hooks/useAxiosSecure';
 import useAuth from '../../../../hooks/useAuth';
