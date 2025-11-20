@@ -76,18 +76,6 @@ const BangladeshMap = ({ searchTerm = "" }) => {
                       <li key={i}>{area}</li>
                     ))}
                   </ul>
-                  {/* {item.flowchart && (
-                    <div className="mt-2">
-                      <a
-                        href={item.flowchart}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="text-blue-600 underline"
-                      >
-                        View Flowchart
-                      </a>
-                    </div>
-                  )} */}
                 </div>
               </Popup>
             </Marker>

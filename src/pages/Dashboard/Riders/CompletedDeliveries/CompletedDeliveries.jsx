@@ -386,7 +386,7 @@ const CompletedDeliveries = () => {
   };
 
   // Calculate statistics
-  const totalDeliveryCost = completedDeliveries.reduce((sum, parcel) => sum + (parcel.deliveryCost || 0), 0);
+  // const totalDeliveryCost = completedDeliveries.reduce((sum, parcel) => sum + (parcel.deliveryCost || 0), 0);
   const totalRiderEarnings = completedDeliveries.reduce((sum, parcel) => {
     const earnings = calculateRiderEarnings(parcel);
     return sum + earnings.riderEarnings;
