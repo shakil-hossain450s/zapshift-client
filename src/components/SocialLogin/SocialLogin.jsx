@@ -14,9 +14,9 @@ const SocialLogin = ({ children }) => {
   const handleGoogleSignIn = async () => {
     try {
       const result = await signInWithGoogle();
-      console.log(result);
+      // console.log(result);
       const user = result.user;
-      
+
 
       if (user) {
 
@@ -28,14 +28,14 @@ const SocialLogin = ({ children }) => {
           provider: 'google'
         }
 
-        const { data } = await axiosCommon.post('/saveUser', userData);
-        console.log(data);
+        await axiosCommon.post('/saveUser', userData);
+        
 
         toast.success('Logged in successfully');
         navigate(from);
       }
     } catch (err) {
-      console.log(err);
+      // console.log(err);
       toast.error(err.stack);
     }
   }

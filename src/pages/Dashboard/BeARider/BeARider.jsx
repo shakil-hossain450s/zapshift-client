@@ -44,11 +44,11 @@ const BeARider = () => {
       appliedAt: new Date().toISOString(),
     };
 
-    console.log("🚀 Rider Application Submitted:", riderData);
+    // console.log("🚀 Rider Application Submitted:", riderData);
 
     try {
       const { data } = await axiosSecure.post('/rider', riderData);
-      console.log(data);
+      // console.log(data);
       if (data.success) {
         Swal.fire({
           title: "Application Submitted!",
@@ -58,7 +58,7 @@ const BeARider = () => {
         });
       }
     } catch (err) {
-      console.log(err);
+      // console.log(err);
     }
   };
 

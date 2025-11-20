@@ -31,13 +31,13 @@ const Register = () => {
     const defaultAvatar = "https://i.ibb.co/user-icon.png";
     const imageUrl = image ? await uploadToImgBB() : defaultAvatar;
 
-    // console.log(username);
-    // return console.log({ username, email, password, imageUrl})
+    // // console.log(username);
+    // return // console.log({ username, email, password, imageUrl})
     try {
       setLoading(true);
 
       const result = await createUser(email, password);
-      console.log(result);
+      // console.log(result);
 
       const user = result.user;
 
@@ -54,7 +54,7 @@ const Register = () => {
 
         const { data } = await axiosCommon.post('/saveUser', userData);
 
-        console.log(data);
+        // console.log(data);
 
         toast.success('Registration successfully!');
         navigate(from);
@@ -62,7 +62,7 @@ const Register = () => {
 
 
     } catch (err) {
-      console.log(err || 'Registration Failed.');
+      // console.log(err || 'Registration Failed.');
     } finally {
       setLoading(false);
     }

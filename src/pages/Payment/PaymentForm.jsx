@@ -34,10 +34,10 @@ const PaymentForm = () => {
   if (isPending) return <p>Loading...</p>
   if (isError) return <p className='text-red-500'>Something went wrong...</p>
 
-  // console.log(parcel?.deliveryCost);
+  // // console.log(parcel?.deliveryCost);
 
   const amountInCents = parseInt(parcel.deliveryCost) * 100;
-  // console.log(amountInCents);
+  // // console.log(amountInCents);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -58,12 +58,12 @@ const PaymentForm = () => {
     });
 
     if (error) {
-      console.log('error:', error);
+      // console.log('error:', error);
       setErrorMessage(error.message);
     } else {
       setErrorMessage('');
       setLoading(false);
-      console.log('payment method:', paymentMethod);
+      // console.log('payment method:', paymentMethod);
 
       try {
         const { data } = await axiosSecure.post(
@@ -71,7 +71,7 @@ const PaymentForm = () => {
           { amountInCents } // body
         );
 
-        console.log(data);
+        // console.log(data);
 
         // confirm payment
         const { error, paymentIntent } = await stripe.confirmCardPayment(data.clientSecret, {
@@ -89,7 +89,7 @@ const PaymentForm = () => {
           console.error(error);
         } else if (paymentIntent.status === 'succeeded') {
           setErrorMessage('');
-          console.log(paymentIntent);
+          // console.log(paymentIntent);
 
           // payment data
           const paymentData = {
@@ -104,7 +104,7 @@ const PaymentForm = () => {
           // set payement history to db
           const { data } = await axiosSecure.post('/payments/success', paymentData);
 
-          // console.log(data);
+          // // console.log(data);
           if (data.success) {
             Swal.fire({
               title: 'Payment Successful!',
@@ -130,7 +130,7 @@ const PaymentForm = () => {
 
       } catch (err) {
         setErrorMessage(err.message || 'payment failed');
-        console.log(err);
+        // console.log(err);
       } finally {
         setLoading(false);
       }

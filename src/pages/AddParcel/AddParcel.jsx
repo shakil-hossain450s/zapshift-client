@@ -171,11 +171,11 @@ const AddParcel = () => {
         };
 
         // Console log final structure (ready for Firestore)
-        console.log("📦 Final Parcel Object:", parcelObj);
+        // console.log("📦 Final Parcel Object:", parcelObj);
 
         try {
           const { data } = await axiosSecure.post(`/parcels`, { parcelObj });
-          console.log(data);
+          // console.log(data);
           if (data.success) {
             toast.custom((t) => (
               <div
@@ -204,7 +204,7 @@ const AddParcel = () => {
             navigate('/dashboard/my-parcels');
           }
         } catch (err) {
-          console.log(err);
+          // console.log(err);
         }
 
       } else {

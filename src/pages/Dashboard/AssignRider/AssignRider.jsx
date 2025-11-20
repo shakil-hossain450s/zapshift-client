@@ -66,8 +66,8 @@ const AssignRider = () => {
       const warehouse = warehouseData.find(w => w.name === parcel.receiver?.warehouse);
       const district = warehouse?.district || parcel.receiver?.district;
 
-      console.log('Parcel district:', district);
-      console.log('Parcel receiver:', parcel.receiver);
+      // console.log('Parcel district:', district);
+      // console.log('Parcel receiver:', parcel.receiver);
 
       if (!district) {
         Swal.fire('Error', 'No district found for this parcel', 'error');
@@ -75,10 +75,10 @@ const AssignRider = () => {
       }
 
       const { data } = await axiosSecure.get(`/riders?district=${encodeURIComponent(district)}`);
-      console.log('Riders API response:', data);
+      // console.log('Riders API response:', data);
 
       if (data.success) {
-        console.log('Available riders:', data.riders);
+        // console.log('Available riders:', data.riders);
         setRiders(data.riders);
 
         if (data.riders.length === 0) {
@@ -128,7 +128,7 @@ const AssignRider = () => {
         });
 
         if (data.success) {
-          console.log('Assignment successful, parcel data:', data.parcel);
+          // console.log('Assignment successful, parcel data:', data.parcel);
           // Updated success message to show all rider info
           Swal.fire({
             title: 'Assigned Successfully!',

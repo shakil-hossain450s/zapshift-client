@@ -229,7 +229,7 @@ const handleDeactivateRider = (rider, action) => {
   if (isPending) return <p>Loading...</p>;
   if (isError) return <p className="text-red-500">Error...</p>
 
-  console.log(activeRiders);
+  // console.log(activeRiders);
 
   return (
     <div data-aos='fade-right'>

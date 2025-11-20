@@ -191,7 +191,7 @@ const PendingRiders = () => {
             email
           });
 
-          console.log(data);
+          // console.log(data);
           if (data.success) {
             Swal.fire(
               `${isApprove ? 'Approved!' : 'Rejected!'}`,
@@ -201,7 +201,7 @@ const PendingRiders = () => {
             refetch(); // Refresh the data
           }
         } catch (err) {
-          console.log(err);
+          // console.log(err);
           Swal.fire(
             'Error!',
             `Failed to ${isApprove ? 'approve' : 'reject'} rider.`,
@@ -216,7 +216,7 @@ const PendingRiders = () => {
   if (isPending) return <p>Loading...</p>;
   if (isError) return <p className="text-red-500">Error...</p>
 
-  console.log(pendingRiders);
+  // console.log(pendingRiders);
 
   return (
     <div data-aos='fade-right'>

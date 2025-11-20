@@ -37,7 +37,7 @@ const useAxiosSecure = () => {
         await signOutUser();
         navigate('/login');
       }
-      console.log('axios interceptor response error:', error);
+      // console.log('axios interceptor response error:', error);
       return Promise.reject(error);
     });
 

@@ -2,7 +2,7 @@ import React from 'react';
 import { FaMoneyBillWave, FaClock, FaReceipt } from "react-icons/fa";
 
 const PaymentHistoryRow = ({ payment, index }) => {
-  console.log(payment);
+  // console.log(payment);
   return (
     <tr className="hover:bg-gray-50">
       <td>{index + 1}</td>

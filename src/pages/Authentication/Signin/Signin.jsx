@@ -17,13 +17,13 @@ const Signin = () => {
     const {email, password} = data;
     try{
       const result = await signInUser(email, password);
-      console.log(result);
+      // console.log(result);
       if(result?.user){
         toast.success('Logged in successfully!');
         navigate("/");
       }
     }catch(err){
-      console.log(err);
+      // console.log(err);
       toast.error(err.stack);
     }
   }

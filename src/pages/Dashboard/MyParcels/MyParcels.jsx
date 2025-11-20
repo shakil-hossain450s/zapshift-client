@@ -22,7 +22,7 @@ const MyParcels = () => {
     queryFn: async () => {
       try {
         const { data } = await axiosSecure.get(`/parcels?email=${user.email}`);
-        console.log("Fetched Parcels:", data);
+        // console.log("Fetched Parcels:", data);
         return data.parcels || [];
       } catch (error) {
         if (error.response?.status === 404) return [];
